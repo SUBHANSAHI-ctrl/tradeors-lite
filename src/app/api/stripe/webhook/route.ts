@@ -5,7 +5,6 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2023-10-16',
 })
 
-// Create Supabase admin client with service role key
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
@@ -24,18 +23,21 @@ export async function POST(req: Request) {
       process.env.STRIPE_WEBHOOK_SECRET!
     )
   } catch (err) {
-    console.error('Webhook signature error:', err)
+    console.error('❌ Webhook signature error:', err)
     return new Response('Webhook Error', { status: 400 })
   }
 
-  // Handle checkout.session.completed event
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as Stripe.Checkout.Session
 
+    console.log('🔥 FULL SESSION:', session)
+
     const userId = session.metadata?.user_id
 
+    console.log('👤 USER ID:', userId)
+
     if (!userId) {
-      console.error('No user_id in metadata')
+      console.error('❌ No user_id in metadata')
       return new Response('Missing user_id', { status: 400 })
     }
 
@@ -45,11 +47,11 @@ export async function POST(req: Request) {
       .eq('user_id', userId)
 
     if (error) {
-      console.error('Supabase update error:', error)
+      console.error('❌ Supabase error:', error)
       return new Response('DB error', { status: 500 })
     }
 
-    console.log('User upgraded to PRO:', userId)
+    console.log('✅ User upgraded to PRO:', userId)
   }
 
   return new Response('OK', { status: 200 })
