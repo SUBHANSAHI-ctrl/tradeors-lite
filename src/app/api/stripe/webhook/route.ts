@@ -42,7 +42,7 @@ export async function POST(req: Request) {
     const { error } = await supabase
       .from('profiles')
       .update({ plan: 'pro' })
-      .eq('id', userId)
+      .eq('user_id', userId)
 
     if (error) {
       console.error('Supabase update error:', error)
