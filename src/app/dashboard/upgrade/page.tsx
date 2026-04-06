@@ -4,20 +4,42 @@ import { DashboardLayout } from '@/components/dashboard/DashboardLayout'
 import { AuthGuard } from '@/components/auth/AuthGuard'
 import { Check, Star, TrendingUp, BarChart3, Calendar, Tag } from 'lucide-react'
 import { BRANDING } from '@/lib/branding'
+import { useAuth } from '@/contexts/AuthContext'
+import { supabase } from '@/lib/supabase'
 
 export default function UpgradePage() {
+  const { user } = useAuth()
+
   const handleUpgrade = async () => {
     try {
+      if (!user) {
+        console.error('No user found')
+        return
+      }
+
+      // Get session directly from supabase since AuthContext doesn't expose it
+      const { data: { session } } = await supabase.auth.getSession()
+      
+      if (!session) {
+        console.error('No session found')
+        return
+      }
+
       const res = await fetch('/api/stripe/checkout', {
         method: 'POST',
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
       })
 
       const data = await res.json()
 
+      console.log('Stripe response:', data)
+
       if (data.url) {
         window.location.href = data.url
       } else {
-        console.error('No checkout URL returned')
+        console.error('Stripe error:', data)
       }
     } catch (error) {
       console.error('Upgrade error:', error)

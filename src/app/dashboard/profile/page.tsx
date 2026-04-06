@@ -7,11 +7,14 @@ import { useTrades } from '@/hooks/useTrades'
 import { TrendingUp, Clock, BarChart3, Brain, Crown, Calendar, LogOut, ArrowUpRight } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { useAuth } from '@/contexts/AuthContext'
+import { supabase } from '@/lib/supabase'
 
 export default function ProfilePage() {
   const { profile, loading: profileLoading } = useUserProfile()
   const { trades, loading: tradesLoading } = useTrades()
   const router = useRouter()
+  const { user } = useAuth()
 
   // Handle loading state
   if (profileLoading || tradesLoading) {
@@ -52,16 +55,34 @@ export default function ProfilePage() {
 
   const handleUpgrade = async () => {
     try {
+      if (!user) {
+        console.error('No user found')
+        return
+      }
+
+      // Get session directly from supabase since AuthContext doesn't expose it
+      const { data: { session } } = await supabase.auth.getSession()
+      
+      if (!session) {
+        console.error('No session found')
+        return
+      }
+
       const res = await fetch('/api/stripe/checkout', {
         method: 'POST',
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
       })
 
       const data = await res.json()
 
+      console.log('Stripe response:', data)
+
       if (data.url) {
         window.location.href = data.url
       } else {
-        console.error('No checkout URL returned')
+        console.error('Stripe error:', data)
       }
     } catch (error) {
       console.error('Upgrade error:', error)
