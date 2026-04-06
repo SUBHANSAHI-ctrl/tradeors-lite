@@ -3,9 +3,11 @@
 import { cn } from '@/lib/utils'
 import { useTrades } from '@/hooks/useTrades'
 import { useTradeFilters } from '@/hooks/useTradeFilters'
+import { useUserProfile } from '@/hooks/useUserProfile'
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout'
 import { MetricsCard } from '@/components/dashboard/MetricsCard'
 import { ReusableTradeFilters } from '@/components/trades/ReusableTradeFilters'
+import { PremiumFeatureWrapper } from '@/components/dashboard/PremiumFeatureWrapper'
 import { calculatePerformanceMetrics, formatCurrency, formatPercentage, getPnLColor, calculateSetupPerformance } from '@/lib/utils'
 import { TrendingUp, TrendingDown, DollarSign, Target, Zap, Activity } from 'lucide-react'
 import { useRef } from 'react'
@@ -19,9 +21,10 @@ import { AuthGuard } from '@/components/auth/AuthGuard'
 export default function DashboardPage() {
   const { trades, loading } = useTrades()
   const { filters, filterOptions, filteredTrades, updateFilter, clearFilters, hasActiveFilters } = useTradeFilters(trades)
+  const { profile, loading: profileLoading } = useUserProfile()
   const exportRef = useRef<HTMLDivElement>(null)
   
-  if (loading) {
+  if (loading || profileLoading) {
     return (
       <AuthGuard>
         <DashboardLayout>
@@ -181,98 +184,110 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* Pair Performance - Full width */}
-          <div className="glass rounded-2xl p-6 border border-white/10">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-white flex items-center space-x-2">
-                <div className="w-2 h-2 bg-green-400 rounded-full" />
-                <span>Performance by Pair</span>
-              </h3>
-              <div className="text-xs text-gray-400 font-mono">
-                Performance breakdown
-              </div>
-            </div>
-            <div className="h-64 md:h-72">
-              <PairPerformanceChart trades={filteredTrades} />
-            </div>
-          </div>
-
-          {/* Setup Performance Analytics - New Section */}
-          {filteredTrades.length > 0 && (
-            <div className="space-y-6">
-              {/* Setup Performance Header */}
-              <div className="flex items-center justify-between glass rounded-2xl p-6 border border-white/10">
-                <div>
-                  <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                    Setup Performance Analytics
-                  </h2>
-                  <p className="text-gray-400 mt-1 font-mono text-sm">
-                    STRATEGY INSIGHTS • PROFITABILITY ANALYSIS
-                  </p>
-                </div>
+          {/* Pair Performance - Premium Feature (Advanced Analytics) */}
+          <PremiumFeatureWrapper
+            featureType="analytics"
+            title="Discover Your Most Profitable Pairs"
+            description="See which trading pairs make you the most money and focus your efforts where they count"
+          >
+            <div className="glass rounded-2xl p-6 border border-white/10">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-white flex items-center space-x-2">
+                  <div className="w-2 h-2 bg-green-400 rounded-full" />
+                  <span>Performance by Pair</span>
+                </h3>
                 <div className="text-xs text-gray-400 font-mono">
-                  {calculateSetupPerformance(filteredTrades).length} active setups
+                  Performance breakdown
                 </div>
               </div>
-
-              {/* Setup Charts Grid */}
-              <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-                {/* Win Rate by Setup */}
-                <div className="glass rounded-2xl p-6 border border-white/10">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold text-white flex items-center space-x-2">
-                      <div className="w-2 h-2 bg-blue-400 rounded-full" />
-                      <span>Win Rate by Setup</span>
-                    </h3>
-                    <div className="text-xs text-gray-400 font-mono">
-                      Success rate analysis
-                    </div>
-                  </div>
-                  <div className="h-64 md:h-72">
-                    <SetupPerformanceChart 
-                      data={calculateSetupPerformance(filteredTrades)} 
-                      title="Win Rate"
-                      dataKey="winRate"
-                      yAxisFormatter={(value) => `${Number(value).toFixed(0)}%`}
-                    />
-                  </div>
-                </div>
-
-                {/* PnL by Setup */}
-                <div className="glass rounded-2xl p-6 border border-white/10">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold text-white flex items-center space-x-2">
-                      <div className="w-2 h-2 bg-green-400 rounded-full" />
-                      <span>P&L by Setup</span>
-                    </h3>
-                    <div className="text-xs text-gray-400 font-mono">
-                      Profitability breakdown
-                    </div>
-                  </div>
-                  <div className="h-64 md:h-72">
-                    <SetupPerformanceChart 
-                      data={calculateSetupPerformance(filteredTrades)} 
-                      title="Total P&L"
-                      dataKey="totalPnL"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Setup Performance Table */}
-              <div className="glass rounded-2xl p-6 border border-white/10">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-white flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-yellow-400 rounded-full" />
-                    <span>Setup Performance Summary</span>
-                  </h3>
-                  <div className="text-xs text-gray-400 font-mono">
-                    Detailed metrics
-                  </div>
-                </div>
-                <SetupPerformanceTable data={calculateSetupPerformance(filteredTrades)} />
+              <div className="h-64 md:h-72">
+                <PairPerformanceChart trades={filteredTrades} />
               </div>
             </div>
+          </PremiumFeatureWrapper>
+
+          {/* Setup Performance Analytics - Premium Features (Advanced Analytics & Advanced Charts) */}
+          {filteredTrades.length > 0 && (
+            <PremiumFeatureWrapper
+              featureType="analytics"
+              title="Find Your Winning Strategies"
+              description="Identify which trading setups generate the most profit and replicate your success"
+            >
+              <div className="space-y-6">
+                {/* Setup Performance Header */}
+                <div className="flex items-center justify-between glass rounded-2xl p-6 border border-white/10">
+                  <div>
+                    <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                      Setup Performance Analytics
+                    </h2>
+                    <p className="text-gray-400 mt-1 font-mono text-sm">
+                      STRATEGY INSIGHTS • PROFITABILITY ANALYSIS
+                    </p>
+                  </div>
+                  <div className="text-xs text-gray-400 font-mono">
+                    {calculateSetupPerformance(filteredTrades).length} active setups
+                  </div>
+                </div>
+
+                {/* Setup Charts Grid */}
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                  {/* Win Rate by Setup */}
+                  <div className="glass rounded-2xl p-6 border border-white/10">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-lg font-semibold text-white flex items-center space-x-2">
+                        <div className="w-2 h-2 bg-blue-400 rounded-full" />
+                        <span>Win Rate by Setup</span>
+                      </h3>
+                      <div className="text-xs text-gray-400 font-mono">
+                        Success rate analysis
+                      </div>
+                    </div>
+                    <div className="h-64 md:h-72">
+                      <SetupPerformanceChart 
+                        data={calculateSetupPerformance(filteredTrades)} 
+                        title="Win Rate"
+                        dataKey="winRate"
+                        yAxisFormatter={(value) => `${Number(value).toFixed(0)}%`}
+                      />
+                    </div>
+                  </div>
+
+                  {/* PnL by Setup */}
+                  <div className="glass rounded-2xl p-6 border border-white/10">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-lg font-semibold text-white flex items-center space-x-2">
+                        <div className="w-2 h-2 bg-green-400 rounded-full" />
+                        <span>P&L by Setup</span>
+                      </h3>
+                      <div className="text-xs text-gray-400 font-mono">
+                        Profitability breakdown
+                      </div>
+                    </div>
+                    <div className="h-64 md:h-72">
+                      <SetupPerformanceChart 
+                        data={calculateSetupPerformance(filteredTrades)} 
+                        title="Total P&L"
+                        dataKey="totalPnL"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Setup Performance Table */}
+                <div className="glass rounded-2xl p-6 border border-white/10">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-semibold text-white flex items-center space-x-2">
+                      <div className="w-2 h-2 bg-yellow-400 rounded-full" />
+                      <span>Setup Performance Summary</span>
+                    </h3>
+                    <div className="text-xs text-gray-400 font-mono">
+                      Detailed metrics
+                    </div>
+                  </div>
+                  <SetupPerformanceTable data={calculateSetupPerformance(filteredTrades)} />
+                </div>
+              </div>
+            </PremiumFeatureWrapper>
           )}
 
           {/* Recent Trades - Fixed table layout */}

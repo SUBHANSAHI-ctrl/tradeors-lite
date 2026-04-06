@@ -71,13 +71,15 @@ export function TradeForm({
   }
 
   const validateForm = (): string | null => {
+    // Only pair is required for fast testing
     if (!formData.pair.trim()) return 'Trading pair is required'
-    if (!formData.setup_tag.trim()) return 'Setup tag is required'
-    if (formData.entry_price === '' || isNaN(Number(formData.entry_price))) return 'Entry price is required and must be a number'
-    if (formData.stop_loss === '' || isNaN(Number(formData.stop_loss))) return 'Stop loss is required and must be a number'
-    if (formData.take_profit === '' || isNaN(Number(formData.take_profit))) return 'Take profit is required and must be a number'
-    if (formData.pnl === '' || isNaN(Number(formData.pnl))) return 'P&L is required and must be a number'
-    if (!formData.trade_date) return 'Trade date is required'
+    
+    // Allow empty fields for faster testing - will set defaults later
+    if (formData.entry_price !== '' && isNaN(Number(formData.entry_price))) return 'Entry price must be a number'
+    if (formData.stop_loss !== '' && isNaN(Number(formData.stop_loss))) return 'Stop loss must be a number'
+    if (formData.take_profit !== '' && isNaN(Number(formData.take_profit))) return 'Take profit must be a number'
+    if (formData.pnl !== '' && isNaN(Number(formData.pnl))) return 'P&L must be a number'
+    
     return null
   }
 
@@ -95,13 +97,16 @@ export function TradeForm({
     }
 
     try {
-      // Convert string numbers to actual numbers for submission
+      // Set default values for empty fields to allow fast testing
       const submitData = {
         ...formData,
+        pair: formData.pair.trim(), // Only required field
         entry_price: formData.entry_price === '' ? 0 : Number(formData.entry_price),
         stop_loss: formData.stop_loss === '' ? 0 : Number(formData.stop_loss),
         take_profit: formData.take_profit === '' ? 0 : Number(formData.take_profit),
         pnl: formData.pnl === '' ? 0 : Number(formData.pnl),
+        setup_tag: formData.setup_tag === '' ? '' : formData.setup_tag,
+        notes: formData.notes === '' ? '' : formData.notes,
         // Keep the screenshot file if it exists
         screenshot: formData.screenshot || undefined,
       }
@@ -175,17 +180,16 @@ export function TradeForm({
           <label htmlFor="entry_price" className="block text-sm font-medium text-gray-300">
             Entry Price
           </label>
-          <input
-            type="number"
-            id="entry_price"
-            name="entry_price"
-            required
-            step="0.01"
-            value={formData.entry_price}
-            onChange={handleChange}
-            className="mt-1 block w-full rounded-md border border-gray-600 bg-gray-800 px-3 py-2 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-            placeholder="Enter entry price"
-          />
+           <input
+             type="number"
+             id="entry_price"
+             name="entry_price"
+             step="0.01"
+             value={formData.entry_price}
+             onChange={handleChange}
+             className="mt-1 block w-full rounded-md border border-gray-600 bg-gray-800 px-3 py-2 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+             placeholder="Enter entry price (optional)"
+           />
         </div>
 
         {/* Stop Loss */}
@@ -193,17 +197,16 @@ export function TradeForm({
           <label htmlFor="stop_loss" className="block text-sm font-medium text-gray-300">
             Stop Loss
           </label>
-          <input
-            type="number"
-            id="stop_loss"
-            name="stop_loss"
-            required
-            step="0.01"
-            value={formData.stop_loss}
-            onChange={handleChange}
-            className="mt-1 block w-full rounded-md border border-gray-600 bg-gray-800 px-3 py-2 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-            placeholder="Enter stop loss"
-          />
+           <input
+             type="number"
+             id="stop_loss"
+             name="stop_loss"
+             step="0.01"
+             value={formData.stop_loss}
+             onChange={handleChange}
+             className="mt-1 block w-full rounded-md border border-gray-600 bg-gray-800 px-3 py-2 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+             placeholder="Enter stop loss (optional)"
+           />
         </div>
 
         {/* Take Profit */}
@@ -211,17 +214,16 @@ export function TradeForm({
           <label htmlFor="take_profit" className="block text-sm font-medium text-gray-300">
             Take Profit
           </label>
-          <input
-            type="number"
-            id="take_profit"
-            name="take_profit"
-            required
-            step="0.01"
-            value={formData.take_profit}
-            onChange={handleChange}
-            className="mt-1 block w-full rounded-md border border-gray-600 bg-gray-800 px-3 py-2 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-            placeholder="Enter take profit"
-          />
+           <input
+             type="number"
+             id="take_profit"
+             name="take_profit"
+             step="0.01"
+             value={formData.take_profit}
+             onChange={handleChange}
+             className="mt-1 block w-full rounded-md border border-gray-600 bg-gray-800 px-3 py-2 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+             placeholder="Enter take profit (optional)"
+           />
         </div>
 
         {/* P&L */}
@@ -229,17 +231,16 @@ export function TradeForm({
           <label htmlFor="pnl" className="block text-sm font-medium text-gray-300">
             P&L ($)
           </label>
-          <input
-            type="number"
-            id="pnl"
-            name="pnl"
-            required
-            step="0.01"
-            value={formData.pnl}
-            onChange={handleChange}
-            className="mt-1 block w-full rounded-md border border-gray-600 bg-gray-800 px-3 py-2 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-            placeholder="Enter profit/loss"
-          />
+           <input
+             type="number"
+             id="pnl"
+             name="pnl"
+             step="0.01"
+             value={formData.pnl}
+             onChange={handleChange}
+             className="mt-1 block w-full rounded-md border border-gray-600 bg-gray-800 px-3 py-2 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+             placeholder="Enter profit/loss (optional)"
+           />
         </div>
 
         {/* Trade Date */}
@@ -247,15 +248,14 @@ export function TradeForm({
           <label htmlFor="trade_date" className="block text-sm font-medium text-gray-300">
             Trade Date
           </label>
-          <input
-            type="date"
-            id="trade_date"
-            name="trade_date"
-            required
-            value={formData.trade_date}
-            onChange={handleChange}
-            className="mt-1 block w-full rounded-md border border-gray-600 bg-gray-800 px-3 py-2 text-white focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-          />
+           <input
+             type="date"
+             id="trade_date"
+             name="trade_date"
+             value={formData.trade_date}
+             onChange={handleChange}
+             className="mt-1 block w-full rounded-md border border-gray-600 bg-gray-800 px-3 py-2 text-white focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+           />
         </div>
 
         {/* Setup Tag */}
@@ -263,16 +263,15 @@ export function TradeForm({
           <label htmlFor="setup_tag" className="block text-sm font-medium text-gray-300">
             Setup Tag
           </label>
-          <input
-            type="text"
-            id="setup_tag"
-            name="setup_tag"
-            required
-            value={formData.setup_tag}
-            onChange={handleChange}
-            className="mt-1 block w-full rounded-md border border-gray-600 bg-gray-800 px-3 py-2 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-            placeholder="e.g., breakout, support bounce, liquidity sweep"
-          />
+           <input
+             type="text"
+             id="setup_tag"
+             name="setup_tag"
+             value={formData.setup_tag}
+             onChange={handleChange}
+             className="mt-1 block w-full rounded-md border border-gray-600 bg-gray-800 px-3 py-2 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+             placeholder="e.g., breakout, support bounce, liquidity sweep (optional)"
+           />
         </div>
 
         {/* Screenshot Upload */}

@@ -57,6 +57,75 @@ CREATE INDEX idx_trades_pair ON trades(pair);
 CREATE INDEX idx_trades_trade_date ON trades(trade_date);
 CREATE INDEX idx_trades_created_at ON trades(created_at);
 
+-- Create profiles table for subscription system
+CREATE TABLE IF NOT EXISTS profiles (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL UNIQUE,
+  plan TEXT DEFAULT 'free' NOT NULL,
+  stripe_customer_id TEXT,
+  stripe_subscription_id TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL
+);
+
+-- Add indexes for profiles table
+CREATE INDEX idx_profiles_user_id ON profiles(user_id);
+CREATE INDEX idx_profiles_plan ON profiles(plan);
+CREATE INDEX idx_profiles_stripe_customer_id ON profiles(stripe_customer_id);
+CREATE INDEX idx_profiles_stripe_subscription_id ON profiles(stripe_subscription_id);
+
+-- Enable Row Level Security on profiles table
+ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
+
+-- Create policies for profiles table with proper security
+
+-- 1. Users can always view their own profile
+CREATE POLICY "Users can view own profile" ON profiles
+  FOR SELECT USING (auth.uid() = user_id);
+
+-- 2. Users cannot update sensitive subscription fields
+-- This policy prevents updates to plan, stripe_customer_id, stripe_subscription_id
+CREATE POLICY "Users cannot update subscription fields" ON profiles
+  FOR UPDATE USING (auth.uid() = user_id)
+  WITH CHECK (
+    -- Only allow updates if sensitive fields are not being changed
+    OLD.plan = NEW.plan AND
+    OLD.stripe_customer_id = NEW.stripe_customer_id AND
+    OLD.stripe_subscription_id = NEW.stripe_subscription_id
+  );
+
+-- 3. Service role can update all fields (for server-side subscription management)
+-- This policy allows service role to update subscription fields
+CREATE POLICY "Service role can update all profile fields" ON profiles
+  FOR UPDATE USING (auth.jwt() ->> 'role' = 'service_role');
+
+-- Create updated_at trigger for profiles table
+CREATE TRIGGER update_profiles_updated_at
+  BEFORE UPDATE ON profiles
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
+-- Backfill existing users with free plan
+INSERT INTO profiles (user_id, plan)
+SELECT id, 'free'
+FROM auth.users
+WHERE id NOT IN (SELECT user_id FROM profiles);
+
+-- Create function to automatically create profile on user signup
+CREATE OR REPLACE FUNCTION handle_new_user()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO profiles (user_id, plan)
+  VALUES (NEW.id, 'free');
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create trigger to automatically create profile for new users
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE FUNCTION handle_new_user();
+
 -- Insert sample data (optional - remove in production)
 -- INSERT INTO trades (user_id, pair, direction, entry_price, stop_loss, take_profit, pnl, setup_tag, notes, trade_date)
 -- VALUES 

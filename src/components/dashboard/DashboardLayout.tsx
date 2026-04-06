@@ -1,12 +1,13 @@
 'use client'
-
 import { useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
-import { Menu, X, TrendingUp, LogOut, PlusCircle, BarChart3 } from 'lucide-react'
+import { Menu, X, TrendingUp, LogOut, PlusCircle, BarChart3, User } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { BRANDING } from '@/lib/branding'
+import { useUserProfile } from '@/hooks/useUserProfile'
+
 
 interface DashboardLayoutProps {
   children: React.ReactNode
@@ -16,6 +17,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const { user, signOut } = useAuth()
   const router = useRouter()
+  const { profile } = useUserProfile()
 
   const handleSignOut = async () => {
     try {
@@ -26,11 +28,12 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     }
   }
 
-  const navigation = [
-    { name: 'Overview', href: '/dashboard', icon: BarChart3 },
-    { name: 'Trades', href: '/dashboard/trades', icon: TrendingUp },
-    { name: 'Add Trade', href: '/dashboard/trades/add', icon: PlusCircle },
-  ]
+const navigation = [
+  { name: 'Overview', href: '/dashboard', icon: BarChart3 },
+  { name: 'Trades', href: '/dashboard/trades', icon: TrendingUp },
+  { name: 'Add Trade', href: '/dashboard/trades/add', icon: PlusCircle },
+  { name: 'Profile', href: '/dashboard/profile', icon: User }, // ✅ NEW
+]
 
   return (
     <div className="min-h-screen gradient-bg text-white overflow-hidden">
@@ -77,7 +80,6 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                 <span className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                   {BRANDING.appName}
                 </span>
-                <div className="text-xs text-gray-400 font-mono">PRO TERMINAL</div>
               </div>
             </div>
           <button
@@ -126,29 +128,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           </div>
         </nav>
 
-        {/* User section - Improved spacing */}
-        <div className="border-t border-white/10 p-6">
-          <div className="space-y-4">
-            <div className="glass rounded-xl p-4">
-            <div className="text-xs text-gray-400 mb-2">Connected</div>
-              <div className="text-sm font-mono text-green-400 truncate">
-                {user?.email?.split('@')[0]}
-              </div>
-              <div className="text-xs text-gray-500 mt-1">{user?.email?.split('@')[1]}</div>
-              <div className="text-xs text-gray-500 mt-1">
-                Support: <a href={`mailto:${BRANDING.supportEmail}`} className="text-blue-400 hover:text-blue-300">{BRANDING.supportEmail}</a>
-              </div>
-            </div>
-            
-            <button
-              onClick={handleSignOut}
-              className="w-full flex items-center justify-center space-x-2 px-4 py-3 text-sm text-gray-300 hover:text-white hover:bg-red-500/10 rounded-xl transition-all duration-200 border border-red-500/20 hover:border-red-500/40"
-            >
-              <LogOut className="h-4 w-4" />
-              <span>Disconnect</span>
-            </button>
-          </div>
-        </div>
+        {/* Sidebar ends right after navigation items - no user section */}
       </div>
 
       {/* Main content - Fixed layout with margin offset and proper height */}
@@ -162,32 +142,16 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             <Menu className="h-5 w-5" />
           </button>
           
-          <div className="flex items-center space-x-6">
-            <div className="hidden lg:flex items-center space-x-4">
-              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-              <span className="text-sm text-gray-400">{BRANDING.companyName} Terminal</span>
-            </div>
-            
-            <div className="flex items-center space-x-4">
-              <div className="text-right">
-                <div className="text-xs text-gray-400">{BRANDING.companyName} Account</div>
-                <div className="text-sm font-mono text-green-400">
-                  {user?.email?.split('@')[0]}
-                </div>
-                <div className="text-xs text-gray-500">
-                  <a href={`mailto:${BRANDING.supportEmail}`} className="text-blue-400 hover:text-blue-300">
-                    {BRANDING.supportEmail}
-                  </a>
-                </div>
-              </div>
-              <button
-                onClick={handleSignOut}
-                className="flex items-center space-x-2 px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-red-500/10 rounded-xl transition-all duration-200 border border-red-500/20 hover:border-red-500/40 hover:scale-105"
-              >
-                <LogOut className="h-4 w-4" />
-                <span>Disconnect</span>
-              </button>
-            </div>
+          <div className="flex items-center space-x-4 ml-auto">
+            {/* Plan Badge - Right aligned, minimal */}
+            <span className={cn(
+              "px-3 py-1 text-xs font-medium rounded-full",
+              profile?.plan === 'pro' 
+                ? "bg-gradient-to-r from-purple-500/20 to-blue-500/20 text-purple-300 border border-purple-500/30"
+                : "bg-white/10 text-gray-300 border border-white/20"
+            )}>
+              {profile?.plan === 'pro' ? 'Pro Plan' : 'Free Plan'}
+            </span>
           </div>
         </div>
 

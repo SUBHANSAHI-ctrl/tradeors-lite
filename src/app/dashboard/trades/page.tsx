@@ -3,17 +3,21 @@
 import { useState } from 'react'
 import { useTrades } from '@/hooks/useTrades'
 import { useTradeFilters } from '@/hooks/useTradeFilters'
+import { useUserProfile } from '@/hooks/useUserProfile'
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout'
 import { TradeForm } from '@/components/trades/TradeForm'
 import { ReusableTradeFilters } from '@/components/trades/ReusableTradeFilters'
+import { TradeCreationButton } from '@/components/trades/TradeCreationButton'
 import { formatCurrency, getPnLColor, getPnLBackground } from '@/lib/utils'
 import { Pencil, Trash2, Plus, Image as ImageIcon } from 'lucide-react'
 import { Trade, TradeFormData } from '@/types/trade'
 import { AuthGuard } from '@/components/auth/AuthGuard'
+import { canCreateTrade } from '@/config/planLimits'
 
 export default function TradesPage() {
   const { trades, loading, addTrade, updateTrade, deleteTrade } = useTrades()
   const { filters, filterOptions, filteredTrades, updateFilter, clearFilters, hasActiveFilters } = useTradeFilters(trades)
+  const { profile, loading: profileLoading } = useUserProfile()
   const [editingTrade, setEditingTrade] = useState<Trade | null>(null)
   const [showForm, setShowForm] = useState(false)
 
@@ -76,13 +80,12 @@ export default function TradesPage() {
         {/* Header - Improved responsive layout */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <h1 className="text-2xl sm:text-3xl font-bold text-white">Your Trades</h1>
-          <button
-            onClick={() => setShowForm(true)}
-            className="flex items-center justify-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors w-full sm:w-auto"
-          >
-            <Plus className="h-4 w-4" />
-            <span>Add Trade</span>
-          </button>
+           <TradeCreationButton 
+             onClick={() => setShowForm(true)}
+             trades={trades}
+             profile={profile}
+             profileLoading={profileLoading}
+           />
         </div>
 
         {/* Trade Filters - Controlled component with single source of truth */}
