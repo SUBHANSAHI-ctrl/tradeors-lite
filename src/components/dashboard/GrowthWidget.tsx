@@ -19,134 +19,126 @@ const LEVEL_CONFIG: Record<GrowthLevel, {
   bar: string
   badgeBg: string
   badgeBorder: string
-  lineColor: string
-  fillColor: string
-  label: string
+  squareBg: string
 }> = {
   1: {
-    color:       'text-[#4A5880]',
-    bar:         'bg-[#4A5880]',
-    badgeBg:     'bg-[#4A5880]/10',
-    badgeBorder: 'border-[#4A5880]/25',
-    lineColor:   '#4A5880',
-    fillColor:   '#4A5880',
-    label:       'Establish a daily habit to strengthen your signal.',
+    color:      'text-[#4A5880]',
+    bar:        'bg-[#4A5880]',
+    badgeBg:    'bg-[#4A5880]/10',
+    badgeBorder:'border-[#4A5880]/25',
+    squareBg:   'bg-[#4A5880]',
   },
   2: {
-    color:       'text-[#4361EE]',
-    bar:         'bg-[#4361EE]',
-    badgeBg:     'bg-[#4361EE]/10',
-    badgeBorder: 'border-[#4361EE]/25',
-    lineColor:   '#4361EE',
-    fillColor:   '#4361EE',
-    label:       'You\'re finding your edge — stay consistent.',
+    color:      'text-[#4361EE]',
+    bar:        'bg-[#4361EE]',
+    badgeBg:    'bg-[#4361EE]/10',
+    badgeBorder:'border-[#4361EE]/25',
+    squareBg:   'bg-[#4361EE]',
   },
   3: {
-    color:       'text-[#2DD4BF]',
-    bar:         'bg-[#2DD4BF]',
-    badgeBg:     'bg-[#2DD4BF]/10',
-    badgeBorder: 'border-[#2DD4BF]/25',
-    lineColor:   '#2DD4BF',
-    fillColor:   '#2DD4BF',
-    label:       'Clear uptrend forming — discipline is compounding.',
+    color:      'text-[#2DD4BF]',
+    bar:        'bg-[#2DD4BF]',
+    badgeBg:    'bg-[#2DD4BF]/10',
+    badgeBorder:'border-[#2DD4BF]/25',
+    squareBg:   'bg-[#2DD4BF]',
   },
   4: {
-    color:       'text-emerald-400',
-    bar:         'bg-emerald-400',
-    badgeBg:     'bg-emerald-400/10',
-    badgeBorder: 'border-emerald-400/25',
-    lineColor:   '#34d399',
-    fillColor:   '#34d399',
-    label:       'You\'re on a streak — don\'t break it.',
+    color:      'text-emerald-400',
+    bar:        'bg-emerald-400',
+    badgeBg:    'bg-emerald-400/10',
+    badgeBorder:'border-emerald-400/25',
+    squareBg:   'bg-emerald-400',
   },
   5: {
-    color:       'text-amber-400',
-    bar:         'bg-amber-400',
-    badgeBg:     'bg-amber-400/10',
-    badgeBorder: 'border-amber-400/25',
-    lineColor:   '#fbbf24',
-    fillColor:   '#fbbf24',
-    label:       'Elite consistency — this is what separates professionals.',
+    color:      'text-amber-400',
+    bar:        'bg-amber-400',
+    badgeBg:    'bg-amber-400/10',
+    badgeBorder:'border-amber-400/25',
+    squareBg:   'bg-amber-400',
   },
 }
 
-// ── Equity curve SVGs — each level is progressively smoother and more upward ─
+// ── 7-day heatmap — built from real trade data ────────────────────────────────
 
-const CURVE_DATA: Record<GrowthLevel, { line: string; area: string; dot: [number, number] }> = {
-  // Level 1 — flat, noisy, no clear direction
-  1: {
-    line: 'M 4,28 L 14,20 L 22,27 L 30,18 L 38,25 L 46,16 L 54,22 L 62,19 L 70,23 L 78,26',
-    area: 'M 4,28 L 14,20 L 22,27 L 30,18 L 38,25 L 46,16 L 54,22 L 62,19 L 70,23 L 78,26 L 78,42 L 4,42 Z',
-    dot:  [78, 26],
-  },
-  // Level 2 — noisy but upward bias appearing
-  2: {
-    line: 'M 4,36 L 14,28 L 22,32 L 30,22 L 38,26 L 46,16 L 54,20 L 62,13 L 70,17 L 78,10',
-    area: 'M 4,36 L 14,28 L 22,32 L 30,22 L 38,26 L 46,16 L 54,20 L 62,13 L 70,17 L 78,10 L 78,42 L 4,42 Z',
-    dot:  [78, 10],
-  },
-  // Level 3 — clear uptrend with moderate oscillation
-  3: {
-    line: 'M 4,38 L 14,30 L 22,26 L 30,20 L 38,22 L 46,14 L 54,16 L 62,9 L 70,11 L 78,6',
-    area: 'M 4,38 L 14,30 L 22,26 L 30,20 L 38,22 L 46,14 L 54,16 L 62,9 L 70,11 L 78,6 L 78,42 L 4,42 Z',
-    dot:  [78, 6],
-  },
-  // Level 4 — smooth, consistent uptrend
-  4: {
-    line: 'M 4,40 L 14,32 L 22,26 L 30,20 L 38,15 L 46,11 L 54,8 L 62,6 L 70,5 L 78,4',
-    area: 'M 4,40 L 14,32 L 22,26 L 30,20 L 38,15 L 46,11 L 54,8 L 62,6 L 70,5 L 78,4 L 78,42 L 4,42 Z',
-    dot:  [78, 4],
-  },
-  // Level 5 — perfect bezier curve, no noise
-  5: {
-    line: 'M 4,42 C 18,38 28,26 40,16 C 52,8 64,4 78,4',
-    area: 'M 4,42 C 18,38 28,26 40,16 C 52,8 64,4 78,4 L 78,42 L 4,42 Z',
-    dot:  [78, 4],
-  },
-}
-
-function CurveIcon({ level }: { level: GrowthLevel }) {
+function WeeklyHeatmap({ trades, level }: { trades: Trade[]; level: GrowthLevel }) {
   const cfg = LEVEL_CONFIG[level]
-  const curve = CURVE_DATA[level]
+
+  const days = useMemo(() => {
+    // Count trades per date
+    const countByDate: Record<string, number> = {}
+    for (const t of trades) {
+      const d = (t.trade_date as string).split('T')[0]
+      countByDate[d] = (countByDate[d] ?? 0) + 1
+    }
+
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+
+    return Array.from({ length: 7 }, (_, i) => {
+      const date = new Date(today)
+      date.setDate(date.getDate() - (6 - i))           // oldest → newest, left → right
+      const str     = date.toISOString().split('T')[0]
+      const count   = countByDate[str] ?? 0
+      const isToday = i === 6
+      const label   = date.toLocaleDateString('en', { weekday: 'short' }).slice(0, 1)
+      return { str, count, isToday, label }
+    })
+  }, [trades])
+
+  const activeDays = days.filter((d) => d.count > 0).length
 
   return (
-    <svg
-      viewBox="0 0 82 44"
-      fill="none"
-      className="w-full h-full"
-      aria-hidden
-    >
-      {/* Horizontal grid lines */}
-      {[42, 28, 14].map((y) => (
-        <line key={y} x1="4" y1={y} x2="78" y2={y}
-          stroke={cfg.lineColor} strokeWidth="0.5" opacity="0.12" />
-      ))}
+    <div className="flex flex-col gap-2 w-full">
+      {/* Day columns */}
+      <div className="flex items-end gap-1.5 w-full">
+        {days.map((day) => (
+          <div key={day.str} className="flex flex-col items-center gap-1 flex-1">
+            {/* Trade count label (only if traded) */}
+            <span className={cn(
+              'text-[9px] font-semibold h-3 leading-none',
+              day.count > 0 ? cfg.color : 'text-transparent'
+            )}>
+              {day.count > 0 ? day.count : ''}
+            </span>
 
-      {/* Area fill */}
-      <path d={curve.area} fill={cfg.fillColor} opacity="0.08" />
+            {/* Square */}
+            <div
+              className={cn(
+                'w-full rounded-md transition-all duration-300',
+                day.count > 0
+                  ? cn(cfg.squareBg, day.count >= 3 ? 'opacity-100' : 'opacity-70')
+                  : 'bg-[#0D1121] border border-[#1A2540]',
+                day.isToday && day.count === 0
+                  ? 'border-[#4361EE]/30'
+                  : ''
+              )}
+              style={{ height: day.count > 0 ? `${Math.min(28 + (day.count - 1) * 4, 44)}px` : '28px' }}
+              title={`${day.str}: ${day.count} trade${day.count !== 1 ? 's' : ''}`}
+            />
 
-      {/* Main curve */}
-      <path
-        d={curve.line}
-        stroke={cfg.lineColor}
-        strokeWidth="1.75"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+            {/* Day label */}
+            <span className={cn(
+              'text-[9px] uppercase',
+              day.isToday ? 'text-[#7B8BB0] font-semibold' : 'text-[#4A5880]'
+            )}>
+              {day.label}
+            </span>
+          </div>
+        ))}
+      </div>
 
-      {/* End dot (current position) */}
-      <circle
-        cx={curve.dot[0]} cy={curve.dot[1]}
-        r="3"
-        fill={cfg.lineColor}
-      />
-      <circle
-        cx={curve.dot[0]} cy={curve.dot[1]}
-        r="5.5"
-        fill={cfg.lineColor}
-        opacity="0.20"
-      />
-    </svg>
+      {/* Footer */}
+      <div className="flex items-center justify-between">
+        <span className="text-[9px] text-[#4A5880]">
+          {activeDays}/7 days active this week
+        </span>
+        {activeDays === 7 && (
+          <span className={cn('text-[9px] font-semibold', cfg.color)}>
+            Perfect week
+          </span>
+        )}
+      </div>
+    </div>
   )
 }
 
@@ -157,7 +149,6 @@ export function GrowthWidget({ trades, plan }: GrowthWidgetProps) {
   const cfg   = LEVEL_CONFIG[state.growthLevel]
   const isPro = plan === 'pro'
 
-  // Animate progress bar after mount
   const [barWidth, setBarWidth] = useState(0)
   useEffect(() => {
     const t = setTimeout(() => setBarWidth(state.growthProgress), 150)
@@ -171,31 +162,30 @@ export function GrowthWidget({ trades, plan }: GrowthWidgetProps) {
 
   return (
     <div className="bg-[#131826] border border-[#1A2540] rounded-xl overflow-hidden">
-
-      {/* Top bar in level color */}
       <div className={cn('h-px w-full opacity-70', cfg.bar)} />
 
       <div className="p-5 flex flex-col sm:flex-row gap-5">
 
-        {/* ── Chart panel ── */}
+        {/* ── Left: 7-day heatmap ── */}
         <div className={cn(
-          'shrink-0 w-full sm:w-44 h-24 sm:h-auto rounded-lg border flex items-center justify-center p-3',
+          'shrink-0 w-full sm:w-48 rounded-lg border p-3 flex flex-col justify-between',
           cfg.badgeBg, cfg.badgeBorder
         )}>
-          <CurveIcon level={state.growthLevel} />
+          <p className="text-[9px] uppercase tracking-widest text-[#4A5880] mb-2">
+            This Week
+          </p>
+          <WeeklyHeatmap trades={trades} level={state.growthLevel} />
         </div>
 
-        {/* ── Info panel ── */}
+        {/* ── Right: info panel ── */}
         <div className="flex-1 flex flex-col justify-between gap-3 min-w-0">
 
-          {/* Header row */}
+          {/* Header */}
           <div className="flex items-start justify-between gap-3">
             <div>
-              {/* Section label */}
               <p className="text-[10px] uppercase tracking-widest text-[#4A5880] mb-1">
                 Signal Growth
               </p>
-              {/* Level */}
               <div className="flex items-center gap-2">
                 <span className={cn(
                   'inline-flex px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded border',
@@ -207,7 +197,6 @@ export function GrowthWidget({ trades, plan }: GrowthWidgetProps) {
                   {LEVEL_NAMES[state.growthLevel]}
                 </span>
               </div>
-              {/* Message */}
               <p className="text-xs text-[#7B8BB0] mt-1 max-w-xs">
                 {state.message}
               </p>
@@ -225,13 +214,12 @@ export function GrowthWidget({ trades, plan }: GrowthWidgetProps) {
             </div>
           </div>
 
-          {/* Stats row */}
+          {/* Stats */}
           <div className="flex items-center gap-5 flex-wrap">
             <div className="flex flex-col gap-0.5">
               <span className="text-[10px] uppercase tracking-wider text-[#4A5880]">Trades</span>
               <span className="text-sm font-semibold text-[#DDE4F0]">{state.totalTrades}</span>
             </div>
-
             <div className="flex flex-col gap-0.5">
               <span className="text-[10px] uppercase tracking-wider text-[#4A5880]">7-day rate</span>
               {isPro ? (
@@ -242,7 +230,6 @@ export function GrowthWidget({ trades, plan }: GrowthWidgetProps) {
                 </span>
               )}
             </div>
-
             <div className="flex flex-col gap-0.5">
               <span className="text-[10px] uppercase tracking-wider text-[#4A5880]">Signal score</span>
               {isPro ? (
@@ -273,7 +260,6 @@ export function GrowthWidget({ trades, plan }: GrowthWidgetProps) {
             </div>
           </div>
 
-          {/* Pro upsell */}
           {!isPro && (
             <Link
               href="/dashboard/upgrade"
@@ -282,7 +268,6 @@ export function GrowthWidget({ trades, plan }: GrowthWidgetProps) {
               Unlock 7-day rate and signal score with Pro →
             </Link>
           )}
-
         </div>
       </div>
     </div>
