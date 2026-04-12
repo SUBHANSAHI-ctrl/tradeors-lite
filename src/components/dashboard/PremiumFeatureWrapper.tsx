@@ -23,9 +23,9 @@ export function PremiumFeatureWrapper({
   // Handle loading state
   if (loading) {
     return (
-      <div className="glass rounded-lg p-6 border border-white/10">
+      <div className="bg-[#131826] border border-[#1A2540] rounded-xl p-6">
         <div className="flex items-center justify-center h-32">
-          <div className="text-gray-400">Loading...</div>
+          <div className="text-[#4A5880] text-sm">Loading...</div>
         </div>
       </div>
     )
@@ -37,24 +37,24 @@ export function PremiumFeatureWrapper({
 
   if (!profile || !canAccess) {
     return (
-      <div className="relative glass rounded-lg p-6 border border-white/10">
+      <div className="relative bg-[#131826] border border-[#1A2540] rounded-xl overflow-hidden">
         {/* Blurred content */}
-        <div className="blur-sm opacity-60 pointer-events-none">
+        <div className="blur-sm opacity-40 pointer-events-none">
           {children}
         </div>
-        
+
         {/* Overlay */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/20 backdrop-blur-sm rounded-lg">
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#08090F]/60 backdrop-blur-sm rounded-xl">
           <div className="text-center p-6">
-            <div className="flex items-center justify-center mb-4">
-              <Lock className="h-8 w-8 text-yellow-400 mr-2" />
-              <Star className="h-8 w-8 text-yellow-400" />
+            <div className="flex items-center justify-center mb-4 gap-2">
+              <Lock className="h-6 w-6 text-[#4361EE]" />
+              <Star className="h-6 w-6 text-[#4361EE]" />
             </div>
-            <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
-            <p className="text-gray-300 mb-4">{description}</p>
+            <h3 className="text-base font-bold text-[#DDE4F0] mb-2">{title}</h3>
+            <p className="text-[#7B8BB0] text-sm mb-5">{description}</p>
             <Link
               href="/dashboard/upgrade"
-              className="inline-flex items-center px-6 py-2 text-sm font-medium bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-lg transition-all duration-200 transform hover:scale-105"
+              className="inline-flex items-center px-6 py-2.5 text-sm font-semibold bg-[#4361EE] hover:bg-[#3451D1] text-white rounded-lg transition-colors"
             >
               Upgrade to Pro
             </Link>

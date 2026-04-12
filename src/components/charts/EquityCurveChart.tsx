@@ -34,7 +34,7 @@ export function EquityCurveChart({ trades }: EquityCurveChartProps) {
   }
 
   return (
-    <ResponsiveContainer width="100%" height="100%" style={{ overflow: 'visible' }}>
+    <ResponsiveContainer width="100%" height="100%">
       <LineChart data={data} margin={{ top: 10, right: 20, left: 10, bottom: 10 }}>
         <defs>
           <linearGradient id="equityGradient" x1="0" y1="0" x2="0" y2="1">

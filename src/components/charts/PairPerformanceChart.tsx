@@ -44,7 +44,7 @@ export function PairPerformanceChart({ trades }: PairPerformanceChartProps) {
   const isSingleItem = pairData.length === 1
 
   return (
-    <ResponsiveContainer width="100%" height="100%" style={{ overflow: 'visible' }}>
+    <ResponsiveContainer width="100%" height="100%">
       <BarChart 
         data={pairData} 
         margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
