@@ -138,12 +138,12 @@ export function TradeForm({
     }
   }
 
-  const inputClass = 'w-full bg-[#0A0C16] border border-[#1E2844] text-[#DDE4F0] placeholder:text-[#4A5880] rounded-lg px-4 py-3 text-sm focus:border-[#4361EE] focus:ring-2 focus:ring-[#4361EE]/30 focus:outline-none transition-colors'
-  const labelClass = 'block text-xs font-medium text-[#4A5880] uppercase tracking-wider mb-1.5'
+  const inputClass = 'w-full bg-[#0A0C16] border border-[#1E2844] text-[#DDE4F0] placeholder:text-[#4A5880] rounded-lg px-4 py-3 text-sm shadow-inner shadow-black/20 focus:border-[#4361EE] focus:ring-2 focus:ring-[#4361EE]/30 focus:outline-none transition-colors'
+  const labelClass = 'block text-xs font-medium text-[#7B8BB0] uppercase tracking-wider mb-2'
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         {/* Pair */}
         <div className="flex flex-col gap-1">
           <label htmlFor="pair" className={labelClass}>
@@ -190,7 +190,7 @@ export function TradeForm({
             step="0.01"
             value={formData.entry_price}
             onChange={handleChange}
-            className={inputClass}
+            className={cn(inputClass, 'appearance-none')}
             placeholder="Optional"
           />
         </div>
@@ -207,7 +207,7 @@ export function TradeForm({
             step="0.01"
             value={formData.stop_loss}
             onChange={handleChange}
-            className={inputClass}
+            className={cn(inputClass, 'appearance-none')}
             placeholder="Optional"
           />
         </div>
@@ -224,7 +224,7 @@ export function TradeForm({
             step="0.01"
             value={formData.take_profit}
             onChange={handleChange}
-            className={inputClass}
+            className={cn(inputClass, 'appearance-none')}
             placeholder="Optional"
           />
         </div>
@@ -241,7 +241,7 @@ export function TradeForm({
             step="0.01"
             value={formData.pnl}
             onChange={handleChange}
-            className={inputClass}
+            className={cn(inputClass, 'appearance-none')}
             placeholder="Optional"
           />
         </div>
@@ -340,7 +340,7 @@ export function TradeForm({
           rows={4}
           value={formData.notes}
           onChange={handleChange}
-          className={inputClass}
+          className={cn(inputClass, 'min-h-30 py-4 resize-none')}
           placeholder="Trade notes, analysis, lessons learned..."
         />
       </div>
@@ -372,7 +372,7 @@ export function TradeForm({
           type="submit"
           disabled={loading}
           className={cn(
-            'flex-1 px-6 py-3 text-sm font-semibold text-white rounded-lg transition-colors',
+            'flex-1 px-6 py-3 text-sm font-semibold text-white rounded-lg transition-all duration-200 hover:scale-[1.01]',
             loading
               ? 'bg-[#1A2540] cursor-not-allowed text-[#4A5880]'
               : 'bg-[#4361EE] hover:bg-[#3451D1]'
