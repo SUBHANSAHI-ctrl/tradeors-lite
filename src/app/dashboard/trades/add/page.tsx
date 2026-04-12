@@ -42,22 +42,26 @@ export default function AddTradePage() {
   return (
     <AuthGuard>
       <DashboardLayout>
-      <div className="max-w-4xl mx-auto">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-white">Add New Trade</h1>
-          <p className="text-gray-400 mt-2">
-            Record your trading performance and analyze your results
-          </p>
-        </div>
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 flex flex-col gap-6">
+          {/* Page header */}
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-bold text-[#DDE4F0] tracking-tight">
+              Add New Trade
+            </h1>
+            <p className="text-[#4A5880] mt-1 text-sm">
+              Record your trading performance and analyse your results
+            </p>
+          </div>
 
-        <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-6 border border-gray-700">
-          <TradeForm
-            onSubmit={handleSubmit}
-            onCancel={handleCancel}
-            submitLabel="Add Trade"
-          />
+          {/* Form card */}
+          <div className="bg-[#131826] border border-[#1A2540] rounded-xl p-6">
+            <TradeForm
+              onSubmit={handleSubmit}
+              onCancel={handleCancel}
+              submitLabel="Add Trade"
+            />
+          </div>
         </div>
-      </div>
       </DashboardLayout>
     </AuthGuard>
   )
