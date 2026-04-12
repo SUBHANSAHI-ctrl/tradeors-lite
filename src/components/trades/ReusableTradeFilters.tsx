@@ -19,143 +19,212 @@ interface ReusableTradeFiltersProps {
   hasActiveFilters: boolean
 }
 
-export function ReusableTradeFilters({ 
-  className, 
-  trades, 
-  filters, 
-  filterOptions, 
-  updateFilter, 
-  clearFilters, 
-  hasActiveFilters 
+/* Reusable styled select wrapper — keeps native <select> for logic compatibility */
+function FilterSelect({
+  label,
+  value,
+  onChange,
+  children,
+}: {
+  label: string
+  value: string
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
+  children: React.ReactNode
+}) {
+  return (
+    <div className="flex flex-col">
+      <label className="text-xs uppercase tracking-wider text-[#4A5880] mb-1.5 font-medium">
+        {label}
+      </label>
+      <div className="relative">
+        <select
+          value={value}
+          onChange={onChange}
+          className={cn(
+            "w-full appearance-none bg-[#0A0C16] border border-[#1E2844] text-[#DDE4F0]",
+            "rounded-lg px-4 py-2.5 pr-10 text-sm",
+            "hover:border-[#4361EE]/40",
+            "focus:border-[#4361EE] focus:ring-2 focus:ring-[#4361EE]/25 focus:outline-none",
+            "transition-all duration-200",
+            "[&>option]:bg-[#131826] [&>option]:text-[#DDE4F0]"
+          )}
+        >
+          {children}
+        </select>
+        {/* Custom dropdown chevron */}
+        <svg
+          className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[#4A5880]"
+          viewBox="0 0 12 12"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M2.5 4.5L6 8L9.5 4.5"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </div>
+    </div>
+  )
+}
+
+/* Reusable styled date input wrapper */
+function FilterDate({
+  label,
+  value,
+  onChange,
+}: {
+  label: string
+  value: string
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+}) {
+  return (
+    <div className="flex flex-col">
+      <label className="text-xs uppercase tracking-wider text-[#4A5880] mb-1.5 font-medium">
+        {label}
+      </label>
+      <div className="relative">
+        <Calendar className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[#4A5880]" />
+        <input
+          type="date"
+          value={value}
+          onChange={onChange}
+          className={cn(
+            "w-full bg-[#0A0C16] border border-[#1E2844] text-[#DDE4F0]",
+            "rounded-lg pl-9 pr-4 py-2.5 text-sm",
+            "hover:border-[#4361EE]/40",
+            "focus:border-[#4361EE] focus:ring-2 focus:ring-[#4361EE]/25 focus:outline-none",
+            "transition-all duration-200",
+            "scheme-dark"
+          )}
+        />
+      </div>
+    </div>
+  )
+}
+
+export function ReusableTradeFilters({
+  className,
+  trades: _trades,
+  filters,
+  filterOptions,
+  updateFilter,
+  clearFilters,
+  hasActiveFilters,
 }: ReusableTradeFiltersProps) {
   const handleFilterChange = (key: keyof TradeFilterState, value: string) => {
     updateFilter(key, value)
   }
 
   return (
-    <div className={cn("glass rounded-lg p-6 border border-white/10", className)}>
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center space-x-2">
-          <Filter className="h-5 w-5 text-gray-400" />
-          <h3 className="text-lg font-semibold text-white">Trade Filters</h3>
+    <div
+      className={cn(
+        "bg-[#131826] border border-[#1A2540] rounded-xl p-5",
+        "hover:border-[#4361EE]/25 transition-colors duration-300",
+        className
+      )}
+    >
+      {/* Header */}
+      <div className="flex items-center justify-between mb-5">
+        <div className="flex items-center gap-2.5">
+          <div className="p-1.5 bg-[#4361EE]/10 rounded-md">
+            <Filter className="h-3.5 w-3.5 text-[#4361EE]" />
+          </div>
+          <span className="text-sm font-semibold text-[#DDE4F0]">Trade Filters</span>
+          {hasActiveFilters && (
+            <span className="px-1.5 py-0.5 text-[10px] font-medium bg-[#4361EE]/15 text-[#4361EE] border border-[#4361EE]/25 rounded-full">
+              Active
+            </span>
+          )}
         </div>
         {hasActiveFilters && (
           <button
             onClick={clearFilters}
-            className="flex items-center space-x-1 px-3 py-1.5 text-sm text-gray-300 hover:text-white bg-gray-700/50 hover:bg-gray-600/50 rounded-md transition-colors"
+            className={cn(
+              "flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg",
+              "border border-[#1E2844] text-[#7B8BB0]",
+              "hover:border-[#4361EE]/40 hover:text-[#DDE4F0]",
+              "transition-all duration-200"
+            )}
           >
-            <X className="h-4 w-4" />
-            <span>Clear Filters</span>
+            <X className="h-3 w-3" />
+            Clear
           </button>
         )}
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3 sm:gap-4">
-        {/* Pair Filter */}
-        <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">
-            Pair
-          </label>
-          <select
-            value={filters.pair}
-            onChange={(e) => handleFilterChange('pair', e.target.value)}
-            className="w-full rounded-md border border-gray-600 bg-gray-800 px-3 py-2 text-white focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-          >
-            <option value="all">All Pairs</option>
-            {filterOptions.pairs.map(pair => (
-              <option key={pair} value={pair}>{pair}</option>
-            ))}
-          </select>
-        </div>
+      {/* Filter grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3">
 
-        {/* Setup Tag Filter */}
-        <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">
-            Setup Tag
-          </label>
-          <select
-            value={filters.setupTag}
-            onChange={(e) => handleFilterChange('setupTag', e.target.value)}
-            className="w-full rounded-md border border-gray-600 bg-gray-800 px-3 py-2 text-white focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-          >
-            <option value="all">All Setups</option>
-            {filterOptions.setupTags.map(tag => (
-              <option key={tag} value={tag}>{tag}</option>
-            ))}
-          </select>
-        </div>
+        {/* Pair */}
+        <FilterSelect
+          label="Pair"
+          value={filters.pair}
+          onChange={(e) => handleFilterChange('pair', e.target.value)}
+        >
+          <option value="all">All Pairs</option>
+          {filterOptions.pairs.map(pair => (
+            <option key={pair} value={pair}>{pair}</option>
+          ))}
+        </FilterSelect>
 
-        {/* Direction Filter */}
-        <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">
-            Direction
-          </label>
-          <select
-            value={filters.direction}
-            onChange={(e) => handleFilterChange('direction', e.target.value as TradeDirection | 'all')}
-            className="w-full rounded-md border border-gray-600 bg-gray-800 px-3 py-2 text-white focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-          >
-            <option value="all">All Directions</option>
-            <option value="long">Long</option>
-            <option value="short">Short</option>
-          </select>
-        </div>
+        {/* Setup Tag */}
+        <FilterSelect
+          label="Setup Tag"
+          value={filters.setupTag}
+          onChange={(e) => handleFilterChange('setupTag', e.target.value)}
+        >
+          <option value="all">All Setups</option>
+          {filterOptions.setupTags.map(tag => (
+            <option key={tag} value={tag}>{tag}</option>
+          ))}
+        </FilterSelect>
 
-        {/* Result Type Filter */}
-        <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">
-            Result Type
-          </label>
-          <select
-            value={filters.resultType}
-            onChange={(e) => handleFilterChange('resultType', e.target.value)}
-            className="w-full rounded-md border border-gray-600 bg-gray-800 px-3 py-2 text-white focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-          >
-            <option value="all">All Results</option>
-            <option value="wins">Wins Only</option>
-            <option value="losses">Losses Only</option>
-          </select>
-        </div>
+        {/* Direction */}
+        <FilterSelect
+          label="Direction"
+          value={filters.direction}
+          onChange={(e) => handleFilterChange('direction', e.target.value as TradeDirection | 'all')}
+        >
+          <option value="all">All Directions</option>
+          <option value="long">Long</option>
+          <option value="short">Short</option>
+        </FilterSelect>
 
-        {/* Date From Filter */}
-        <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">
-            From Date
-          </label>
-          <div className="relative">
-            <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-            <input
-              type="date"
-              value={filters.dateFrom}
-              onChange={(e) => handleFilterChange('dateFrom', e.target.value)}
-              className="w-full pl-10 pr-3 py-2 rounded-md border border-gray-600 bg-gray-800 text-white focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-            />
-          </div>
-        </div>
+        {/* Result Type */}
+        <FilterSelect
+          label="Result Type"
+          value={filters.resultType}
+          onChange={(e) => handleFilterChange('resultType', e.target.value)}
+        >
+          <option value="all">All Results</option>
+          <option value="wins">Wins Only</option>
+          <option value="losses">Losses Only</option>
+        </FilterSelect>
 
-        {/* Date To Filter */}
-        <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">
-            To Date
-          </label>
-          <div className="relative">
-            <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-            <input
-              type="date"
-              value={filters.dateTo}
-              onChange={(e) => handleFilterChange('dateTo', e.target.value)}
-              className="w-full pl-10 pr-3 py-2 rounded-md border border-gray-600 bg-gray-800 text-white focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-            />
-          </div>
-        </div>
+        {/* Date From */}
+        <FilterDate
+          label="From Date"
+          value={filters.dateFrom}
+          onChange={(e) => handleFilterChange('dateFrom', e.target.value)}
+        />
+
+        {/* Date To */}
+        <FilterDate
+          label="To Date"
+          value={filters.dateTo}
+          onChange={(e) => handleFilterChange('dateTo', e.target.value)}
+        />
       </div>
 
-      {/* Filter Status */}
+      {/* Active filter status bar */}
       {hasActiveFilters && (
-        <div className="mt-4 p-3 bg-blue-500/10 border border-blue-500/20 rounded-md">
-          <p className="text-sm text-blue-400">
-            Active filters applied
-          </p>
+        <div className="mt-4 flex items-center gap-2 px-3 py-2 bg-[#4361EE]/8 border border-[#4361EE]/20 rounded-lg">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#4361EE] animate-pulse" />
+          <p className="text-xs text-[#4361EE]">Filtered results active</p>
         </div>
       )}
     </div>

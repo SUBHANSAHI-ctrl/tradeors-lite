@@ -16,7 +16,6 @@ export function useUserProfile(): UseUserProfileReturn {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    // Handle user = null case safely
     if (!user) {
       setProfile(null)
       setLoading(false)
@@ -24,7 +23,6 @@ export function useUserProfile(): UseUserProfileReturn {
       return
     }
 
-    // Fetch user profile
     const fetchProfile = async () => {
       try {
         setLoading(true)
@@ -40,11 +38,9 @@ export function useUserProfile(): UseUserProfileReturn {
           console.error('Error fetching user profile:', error)
           setError(error.message)
           setProfile(null)
-} else if (data) {
-  console.log('PROFILE:', data) // 👈 ADD THIS
-  setProfile(data as Profile)
-} else {
-          // Profile doesn't exist yet (shouldn't happen with our trigger, but handle gracefully)
+        } else if (data) {
+          setProfile(data as Profile)
+        } else {
           setProfile(null)
         }
       } catch (err) {
@@ -57,11 +53,7 @@ export function useUserProfile(): UseUserProfileReturn {
     }
 
     fetchProfile()
-  }, [user]) // Refetch when user changes
+  }, [user])
 
-  return {
-    profile,
-    loading,
-    error
-  }
+  return { profile, loading, error }
 }

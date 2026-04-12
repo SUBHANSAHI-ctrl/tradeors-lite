@@ -26,7 +26,7 @@ export function useTrades(): UseTradesReturn {
     try {
       setLoading(true)
       setError(null)
-      
+
       const { data: { session } } = await supabase.auth.getSession()
       if (!session) throw new Error('No active session')
 
@@ -37,9 +37,7 @@ export function useTrades(): UseTradesReturn {
         },
       })
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch trades')
-      }
+      if (!response.ok) throw new Error('Failed to fetch trades')
 
       const data = await response.json()
       setTrades(data)
@@ -55,33 +53,23 @@ export function useTrades(): UseTradesReturn {
 
     try {
       setError(null)
-      
+
       const { data: { session } } = await supabase.auth.getSession()
       if (!session) throw new Error('No active session')
-
-      // Debug: Check if screenshot exists
-      console.log('addTrade - tradeData received:', tradeData)
-      console.log('addTrade - screenshot file:', tradeData.screenshot)
-      console.log('addTrade - screenshot type:', typeof tradeData.screenshot)
 
       // Handle screenshot upload if provided
       let screenshotUrl: string | null = null
       if (tradeData.screenshot) {
-        console.log('addTrade - uploading screenshot...')
         const { data: { user: currentUser } } = await supabase.auth.getUser()
         if (!currentUser) throw new Error('No user found for upload')
 
-        // Generate a temporary ID for the trade (we'll get the real one after insert)
         const tempTradeId = `temp-${Date.now()}`
         const uploadResult = await uploadTradeScreenshot(tradeData.screenshot, currentUser.id, tempTradeId)
-        
-        console.log('addTrade - upload result:', uploadResult)
-        
+
         if (uploadResult.url) {
           screenshotUrl = uploadResult.url
-          console.log('addTrade - screenshot URL generated:', screenshotUrl)
-        } else {
-          console.error('addTrade - screenshot upload failed:', uploadResult.error)
+        } else if (uploadResult.error) {
+          console.error('Screenshot upload failed:', uploadResult.error)
         }
       }
 
@@ -89,11 +77,8 @@ export function useTrades(): UseTradesReturn {
       const { screenshot, ...tradeDataWithoutFile } = tradeData
       const payload = {
         ...tradeDataWithoutFile,
-        screenshot_url: screenshotUrl || null
+        screenshot_url: screenshotUrl ?? null,
       }
-
-      console.log('addTrade - final payload being sent to API:', payload)
-      console.log('addTrade - screenshot_url in payload:', payload.screenshot_url)
 
       const response = await fetch('/api/trades', {
         method: 'POST',
@@ -104,18 +89,14 @@ export function useTrades(): UseTradesReturn {
         body: JSON.stringify(payload),
       })
 
-      console.log('addTrade - API response status:', response.status)
-
       if (!response.ok) {
         const errorData = await response.json()
         throw new Error(errorData.error || 'Failed to add trade')
       }
 
       const newTrade = await response.json()
-      console.log('addTrade - response trade:', newTrade)
       setTrades(prev => [newTrade, ...prev])
     } catch (err) {
-      console.error('addTrade - error:', err)
       setError(err instanceof Error ? err.message : 'Failed to add trade')
       throw err
     }
@@ -126,31 +107,22 @@ export function useTrades(): UseTradesReturn {
 
     try {
       setError(null)
-      
+
       const { data: { session } } = await supabase.auth.getSession()
       if (!session) throw new Error('No active session')
-
-      // Debug: Check if screenshot exists
-      console.log('updateTrade - tradeData received:', tradeData)
-      console.log('updateTrade - screenshot file:', tradeData.screenshot)
-      console.log('updateTrade - screenshot type:', typeof tradeData.screenshot)
 
       // Handle screenshot upload if provided
       let screenshotUrl: string | null = null
       if (tradeData.screenshot) {
-        console.log('updateTrade - uploading screenshot...')
         const { data: { user: currentUser } } = await supabase.auth.getUser()
         if (!currentUser) throw new Error('No user found for upload')
 
         const uploadResult = await uploadTradeScreenshot(tradeData.screenshot, currentUser.id, id)
-        
-        console.log('updateTrade - upload result:', uploadResult)
-        
+
         if (uploadResult.url) {
           screenshotUrl = uploadResult.url
-          console.log('updateTrade - screenshot URL generated:', screenshotUrl)
-        } else {
-          console.error('updateTrade - screenshot upload failed:', uploadResult.error)
+        } else if (uploadResult.error) {
+          console.error('Screenshot upload failed during update:', uploadResult.error)
         }
       }
 
@@ -160,8 +132,6 @@ export function useTrades(): UseTradesReturn {
         ...tradeDataWithoutFile,
         ...(screenshotUrl ? { screenshot_url: screenshotUrl } : {}),
       }
-
-      console.log('updateTrade - final payload:', payload)
 
       const response = await fetch(`/api/trades/${id}`, {
         method: 'PUT',
@@ -178,12 +148,8 @@ export function useTrades(): UseTradesReturn {
       }
 
       const updatedTrade = await response.json()
-      console.log('updateTrade - response trade:', updatedTrade)
-      setTrades(prev => prev.map(trade => 
-        trade.id === id ? updatedTrade : trade
-      ))
+      setTrades(prev => prev.map(trade => trade.id === id ? updatedTrade : trade))
     } catch (err) {
-      console.error('updateTrade - error:', err)
       setError(err instanceof Error ? err.message : 'Failed to update trade')
       throw err
     }
@@ -194,7 +160,7 @@ export function useTrades(): UseTradesReturn {
 
     try {
       setError(null)
-      
+
       const { data: { session } } = await supabase.auth.getSession()
       if (!session) throw new Error('No active session')
 
@@ -227,13 +193,5 @@ export function useTrades(): UseTradesReturn {
     }
   }, [user, fetchTrades])
 
-  return {
-    trades,
-    loading,
-    error,
-    fetchTrades,
-    addTrade,
-    updateTrade,
-    deleteTrade,
-  }
+  return { trades, loading, error, fetchTrades, addTrade, updateTrade, deleteTrade }
 }

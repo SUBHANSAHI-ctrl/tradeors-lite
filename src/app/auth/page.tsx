@@ -23,39 +23,44 @@ export default function AuthPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 flex items-center justify-center py-8 px-4 sm:py-12 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-6 sm:space-y-8">
-        <div className="text-center px-2">
-          <div className="flex items-center justify-center mb-4">
-            <img 
-              src={BRANDING.logo.main} 
+    <div className="min-h-screen bg-[#08090F] flex items-center justify-center py-8 px-4 sm:py-12 sm:px-6 lg:px-8 relative overflow-hidden">
+      {/* Ambient orbs */}
+      <div className="absolute top-1/4 left-1/3 w-80 h-80 bg-[#4361EE]/6 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/3 w-64 h-64 bg-[#2DD4BF]/5 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="relative max-w-md w-full space-y-5">
+        {/* Header */}
+        <div className="text-left px-1">
+          <div className="flex items-center gap-2.5 mb-5">
+            <img
+              src={BRANDING.logo.main}
               alt={`${BRANDING.companyName} ${BRANDING.appName} Logo`}
-              className="h-16 w-16 object-contain"
+              className="h-8 w-8 object-contain"
               onError={(e) => {
                 e.currentTarget.style.display = 'none';
-                e.currentTarget.nextElementSibling!.classList.remove('hidden');
+                (e.currentTarget.nextElementSibling as HTMLElement)?.classList.remove('hidden');
               }}
             />
-            <TrendingUp className="h-16 w-16 text-blue-400 hidden" />
+            <TrendingUp className="h-8 w-8 text-[#4361EE] hidden" />
+            <span className="text-base font-bold text-[#DDE4F0]">{BRANDING.appName}</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">
-            {BRANDING.appName}
+          <h1 className="text-2xl sm:text-3xl font-bold text-[#DDE4F0] tracking-tight mb-1">
+            {authMode === 'login'  ? 'Welcome back'       :
+             authMode === 'signup' ? 'Create your account' :
+                                     'Reset password'}
           </h1>
-          <p className="text-sm text-gray-400">
-            by {BRANDING.companyName}
-          </p>
-          <p className="text-gray-400 text-base sm:text-lg mt-2">
-            Professional trading analytics that expose your mistakes.
-          </p>
-          <p className="text-xs text-gray-500 mt-2">
-            Need help? Contact us at <a href={`mailto:${BRANDING.supportEmail}`} className="text-blue-400 hover:text-blue-300">{BRANDING.supportEmail}</a>
+          <p className="text-sm text-[#7B8BB0]">
+            {authMode === 'login'  ? `Sign in to ${BRANDING.appName}`         :
+             authMode === 'signup' ? 'Start tracking your trades for free'     :
+                                     'We\'ll send you a reset link'}
           </p>
         </div>
-        
-        <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-6 sm:p-8 border border-gray-700">
+
+        {/* Form card */}
+        <div className="bg-[#131826] border border-[#1A2540] rounded-xl p-6 sm:p-8">
           {authMode === 'login' && (
-            <LoginForm 
-              onToggle={handleToggle} 
+            <LoginForm
+              onToggle={handleToggle}
               onForgotPassword={handleForgotPassword}
             />
           )}
@@ -66,22 +71,22 @@ export default function AuthPage() {
             <ForgotPasswordForm onBack={handleBackToLogin} />
           )}
         </div>
-        
-        <div className="text-center text-xs sm:text-sm text-gray-400 px-2">
-          <p>
-            By continuing, you agree to our{' '}
-            <a href={BRANDING.legal.termsUrl} className="text-blue-400 hover:text-blue-300">
-              Terms of Service
-            </a>{' '}
-            and{' '}
-            <a href={BRANDING.legal.privacyUrl} className="text-blue-400 hover:text-blue-300">
-              Privacy Policy
-            </a>
-          </p>
-          <p className="mt-2">
-            Need help? <a href={`mailto:${BRANDING.supportEmail}`} className="text-blue-400 hover:text-blue-300">{BRANDING.supportEmail}</a>
-          </p>
-        </div>
+
+        {/* Legal */}
+        <p className="text-center text-xs text-[#4A5880] px-2">
+          By continuing, you agree to our{' '}
+          <a href={BRANDING.legal.termsUrl} className="text-[#4361EE] hover:text-[#3451D1] transition-colors">
+            Terms of Service
+          </a>{' '}
+          and{' '}
+          <a href={BRANDING.legal.privacyUrl} className="text-[#4361EE] hover:text-[#3451D1] transition-colors">
+            Privacy Policy
+          </a>
+          {' '}· Questions?{' '}
+          <a href={`mailto:${BRANDING.supportEmail}`} className="text-[#4361EE] hover:text-[#3451D1] transition-colors">
+            {BRANDING.supportEmail}
+          </a>
+        </p>
       </div>
     </div>
   )

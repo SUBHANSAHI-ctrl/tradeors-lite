@@ -1,199 +1,130 @@
 @import 'tailwindcss';
 
 :root {
-  --foreground-rgb: 255, 255, 255;
-  --background-start-rgb: 17, 24, 39;
-  --background-end-rgb: 17, 24, 39;
+  /* Design System */
+  --bg: #08090F;
+  --surface: #0F1220;
+  --card: #131826;
+  --card-deep: #0D1121;
+  --input: #0A0C16;
+
+  --primary: #4361EE;
+  --primary-hover: #3451D1;
+  --accent: #2DD4BF;
+
+  --text-primary: #DDE4F0;
+  --text-secondary: #7B8BB0;
+  --text-subtle: #4A5880;
+
+  --border: #1A2540;
+  --border-strong: #1E2844;
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  color: var(--text-primary);
+  background-color: var(--bg);
 }
 
-/* Custom scrollbar for dark theme */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+/* ─── Scrollbar ─────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #0F1220; }
+::-webkit-scrollbar-thumb { background: #1E2844; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #4361EE; }
+
+/* ─── SVG chart draw-in ─────────────────────────────── */
+@keyframes drawLine {
+  from { stroke-dashoffset: 1000; }
+  to   { stroke-dashoffset: 0; }
+}
+.animate-draw-line {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: drawLine 2s ease-out forwards;
 }
 
-::-webkit-scrollbar-track {
-  background: #1f2937;
+/* ─── Floating card ─────────────────────────────────── */
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(2deg); }
+  50%       { transform: translateY(-8px) rotate(2deg); }
 }
+.animate-float { animation: float 4s ease-in-out infinite; }
 
-::-webkit-scrollbar-thumb {
-  background: #374151;
-  border-radius: 4px;
+/* ─── Staggered fade-in ─────────────────────────────── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
+.animate-fade-in-up   { animation: fadeInUp 0.6s ease-out forwards; }
+.animate-fade-in-up-1 { opacity: 0; animation: fadeInUp 0.6s ease-out 0.2s forwards; }
+.animate-fade-in-up-2 { opacity: 0; animation: fadeInUp 0.6s ease-out 0.4s forwards; }
+.animate-fade-in-up-3 { opacity: 0; animation: fadeInUp 0.6s ease-out 0.6s forwards; }
+.animate-fade-in-up-4 { opacity: 0; animation: fadeInUp 0.6s ease-out 0.8s forwards; }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #4b5563;
-}
-
-/* Trading terminal glow effects */
-.glow-green {
-  box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
-}
-
-.glow-red {
-  box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
-}
-
-.glow-blue {
-  box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
-}
-
-/* Professional card hover effects */
-.card-hover {
-  transition: all 0.3s ease;
-}
-
-.card-hover:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-}
-
-/* Neon text effects */
-.text-glow {
-  text-shadow: 0 0 10px currentColor;
-}
-
-/* Custom animations */
+/* ─── Generic fade-in (used in dashboard) ───────────── */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
+.animate-fade-in { animation: fadeIn 0.6s ease-out; }
 
-.animate-fade-in {
-  animation: fadeIn 0.6s ease-out;
+/* ─── Metric card slide up ──────────────────────────── */
+@keyframes slideInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
+.metric-card { animation: slideInUp 0.5s ease-out; }
 
-/* Chart container styles */
-.chart-container {
-  background: rgba(31, 41, 55, 0.5);
-  border: 1px solid rgba(55, 65, 81, 0.5);
-  border-radius: 0.5rem;
-  backdrop-filter: blur(10px);
+/* ─── Shimmer (loading skeleton) ────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
 }
-
-/* Professional button styles */
-.btn-primary {
-  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-  border: none;
-  transition: all 0.3s ease;
-}
-
-.btn-primary:hover {
-  background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%);
-  transform: translateY(-1px);
-  box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
-}
-
-/* Input focus styles */
-.form-input:focus {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-/* Loading shimmer effect */
 .shimmer {
-  background: linear-gradient(90deg, #1f2937 25%, #374151 50%, #1f2937 75%);
+  background: linear-gradient(90deg, #0F1220 25%, #1A2540 50%, #0F1220 75%);
   background-size: 200% 100%;
   animation: shimmer 2s infinite;
 }
 
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-
-/* Professional table styles */
-.data-table {
-  border-collapse: separate;
-  border-spacing: 0;
-}
-
-.data-table th {
-  background: rgba(31, 41, 55, 0.8);
-  backdrop-filter: blur(10px);
-}
-
-.data-table tr:hover {
-  background: rgba(55, 65, 81, 0.3);
-}
-
-/* Metric card animations */
-.metric-card {
-  animation: slideInUp 0.5s ease-out;
-}
-
-@keyframes slideInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Professional gradient backgrounds */
-.gradient-bg {
-  background: linear-gradient(135deg, #111827 0%, #1f2937 50%, #111827 100%);
-}
-
-/* Glass morphism effect */
-.glass {
-  background: rgba(31, 41, 55, 0.6);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* Trading pair badges */
-.pair-badge {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(147, 51, 234, 0.2) 100%);
-  border: 1px solid rgba(59, 130, 246, 0.3);
-}
-
-/* Success/Error animations */
+/* ─── Pulse overlays ────────────────────────────────── */
 @keyframes pulse-success {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.7;
-  }
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.7; }
 }
-
-.pulse-success {
-  animation: pulse-success 2s infinite;
-}
+.pulse-success { animation: pulse-success 2s infinite; }
 
 @keyframes pulse-error {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.7;
-  }
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.7; }
+}
+.pulse-error { animation: pulse-error 1.5s infinite; }
+
+/* ─── Glow effects ──────────────────────────────────── */
+.glow-green { box-shadow: 0 0 20px rgba(16, 185, 129, 0.3); }
+.glow-red   { box-shadow: 0 0 20px rgba(239, 68, 68, 0.3); }
+.glow-blue  { box-shadow: 0 0 20px rgba(67, 97, 238, 0.3); }
+.text-glow  { text-shadow: 0 0 10px currentColor; }
+
+/* ─── Card hover ────────────────────────────────────── */
+.card-hover { transition: all 0.3s ease; }
+.card-hover:hover { transform: translateY(-2px); }
+
+/* ─── Glass morphism ────────────────────────────────── */
+.glass {
+  background: rgba(15, 18, 32, 0.75);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(26, 37, 64, 0.9);
 }
 
-.pulse-error {
-  animation: pulse-error 1.5s infinite;
+/* ─── Background base ───────────────────────────────── */
+.gradient-bg { background-color: #08090F; }
+
+/* ─── Table ─────────────────────────────────────────── */
+.data-table { border-collapse: separate; border-spacing: 0; }
+.data-table th { background: rgba(13, 17, 33, 0.8); backdrop-filter: blur(10px); }
+.data-table tr:hover { background: rgba(67, 97, 238, 0.05); }
+
+/* ─── Pair badge ────────────────────────────────────── */
+.pair-badge {
+  background: linear-gradient(135deg, rgba(67,97,238,0.15) 0%, rgba(45,212,191,0.08) 100%);
+  border: 1px solid rgba(67, 97, 238, 0.25);
 }

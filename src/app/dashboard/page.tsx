@@ -9,7 +9,7 @@ import { MetricsCard } from '@/components/dashboard/MetricsCard'
 import { ReusableTradeFilters } from '@/components/trades/ReusableTradeFilters'
 import { PremiumFeatureWrapper } from '@/components/dashboard/PremiumFeatureWrapper'
 import { calculatePerformanceMetrics, formatCurrency, formatPercentage, getPnLColor, calculateSetupPerformance } from '@/lib/utils'
-import { TrendingUp, TrendingDown, DollarSign, Target, Zap, Activity } from 'lucide-react'
+import { TrendingUp, DollarSign, Target, Zap, Activity } from 'lucide-react'
 import { useRef } from 'react'
 import { EquityCurveChart } from '@/components/charts/EquityCurveChart'
 import { WinLossChart } from '@/components/charts/WinLossChart'
@@ -17,6 +17,7 @@ import { PairPerformanceChart } from '@/components/charts/PairPerformanceChart'
 import { SetupPerformanceChart } from '@/components/charts/SetupPerformanceChart'
 import { SetupPerformanceTable } from '@/components/charts/SetupPerformanceTable'
 import { AuthGuard } from '@/components/auth/AuthGuard'
+import { BehaviorAlert } from '@/components/dashboard/BehaviorAlert'
 
 export default function DashboardPage() {
   const { trades, loading } = useTrades()
@@ -42,26 +43,29 @@ export default function DashboardPage() {
     <AuthGuard>
       <DashboardLayout>
 <div className="space-y-8">
+          {/* Behavior Intelligence System — sits outside export ref, runs on raw trades */}
+          <BehaviorAlert trades={trades} plan={profile?.plan ?? 'free'} />
+
           {/* Dedicated export container - only dashboard content without header/buttons */}
           <div ref={exportRef} className="space-y-8">
             {/* Header - Premium styling with filters */}
             <div className="glass rounded-2xl p-6 border border-white/10">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                <h1 className="text-2xl sm:text-3xl font-bold text-[#DDE4F0] tracking-tight">
                   Trading Dashboard
                 </h1>
-                <p className="text-gray-400 mt-2 font-mono text-sm">
-                  LIVE MARKET DATA • REAL-TIME ANALYTICS
+                <p className="text-[#4A5880] mt-1 text-xs uppercase tracking-widest">
+                  Performance Analytics
                 </p>
               </div>
               <div className="flex items-center space-x-4">
-                <div className="text-right">
-                  <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">Last Updated</div>
-                  <div className="text-lg font-mono text-green-400 text-glow">
+                <div className="hidden sm:block text-right">
+                  <div className="text-[10px] text-[#4A5880] uppercase tracking-wider mb-0.5">Last Updated</div>
+                  <div className="text-sm font-mono text-[#2DD4BF]">
                     {new Date().toLocaleTimeString()}
                   </div>
-                  <div className="text-xs text-gray-500">
+                  <div className="text-[10px] text-[#4A5880]">
                     {new Date().toLocaleDateString()}
                   </div>
                 </div>
@@ -104,7 +108,7 @@ export default function DashboardPage() {
           )}
 
           {/* Key Metrics Grid - Premium cards with filtered data - Improved responsive grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 sm:gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3 sm:gap-4">
             <MetricsCard
               title="Total Trades"
               value={metrics.totalTrades}
@@ -168,20 +172,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Win/Loss Distribution */}
-            <div className="glass rounded-2xl p-6 border border-white/10">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-white flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-purple-400 rounded-full" />
-                  <span>Win/Loss Distribution</span>
-                </h3>
-                <div className="text-xs text-gray-400 font-mono">
-                  {formatPercentage(metrics.winRate)} win rate
-                </div>
-              </div>
-              <div className="h-64 md:h-72">
-                <WinLossChart trades={filteredTrades} />
-              </div>
-            </div>
+            <WinLossChart trades={filteredTrades} />
           </div>
 
           {/* Pair Performance - Premium Feature (Advanced Analytics) */}
