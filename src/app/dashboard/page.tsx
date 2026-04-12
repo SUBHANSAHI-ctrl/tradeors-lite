@@ -18,6 +18,7 @@ import { SetupPerformanceChart } from '@/components/charts/SetupPerformanceChart
 import { SetupPerformanceTable } from '@/components/charts/SetupPerformanceTable'
 import { AuthGuard } from '@/components/auth/AuthGuard'
 import { BehaviorAlert } from '@/components/dashboard/BehaviorAlert'
+import { GrowthWidget } from '@/components/dashboard/GrowthWidget'
 
 export default function DashboardPage() {
   const { trades, loading } = useTrades()
@@ -46,6 +47,9 @@ export default function DashboardPage() {
 
           {/* Behavior Intelligence System — runs on raw trades, outside export ref */}
           <BehaviorAlert trades={trades} plan={profile?.plan ?? 'free'} />
+
+          {/* Trading Growth System */}
+          <GrowthWidget trades={trades} plan={profile?.plan ?? 'free'} />
 
           <div ref={exportRef} className="space-y-5">
 
