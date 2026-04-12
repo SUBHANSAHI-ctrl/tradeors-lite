@@ -14,137 +14,139 @@ interface GrowthWidgetProps {
 
 // ── Level config ──────────────────────────────────────────────────────────────
 
-const LEVEL_CONFIG: Record<
-  GrowthLevel,
-  { color: string; bar: string; badge: string; glow: string }
-> = {
+const LEVEL_CONFIG: Record<GrowthLevel, {
+  color: string
+  bar: string
+  badgeBg: string
+  badgeBorder: string
+  lineColor: string
+  fillColor: string
+  label: string
+}> = {
   1: {
-    color: 'text-[#4A5880]',
-    bar:   'bg-[#4A5880]',
-    badge: 'bg-[#4A5880]/10 border-[#4A5880]/25 text-[#4A5880]',
-    glow:  '',
+    color:       'text-[#4A5880]',
+    bar:         'bg-[#4A5880]',
+    badgeBg:     'bg-[#4A5880]/10',
+    badgeBorder: 'border-[#4A5880]/25',
+    lineColor:   '#4A5880',
+    fillColor:   '#4A5880',
+    label:       'Establish a daily habit to strengthen your signal.',
   },
   2: {
-    color: 'text-[#4361EE]',
-    bar:   'bg-[#4361EE]',
-    badge: 'bg-[#4361EE]/10 border-[#4361EE]/25 text-[#4361EE]',
-    glow:  '',
+    color:       'text-[#4361EE]',
+    bar:         'bg-[#4361EE]',
+    badgeBg:     'bg-[#4361EE]/10',
+    badgeBorder: 'border-[#4361EE]/25',
+    lineColor:   '#4361EE',
+    fillColor:   '#4361EE',
+    label:       'You\'re finding your edge — stay consistent.',
   },
   3: {
-    color: 'text-[#2DD4BF]',
-    bar:   'bg-[#2DD4BF]',
-    badge: 'bg-[#2DD4BF]/10 border-[#2DD4BF]/25 text-[#2DD4BF]',
-    glow:  '',
+    color:       'text-[#2DD4BF]',
+    bar:         'bg-[#2DD4BF]',
+    badgeBg:     'bg-[#2DD4BF]/10',
+    badgeBorder: 'border-[#2DD4BF]/25',
+    lineColor:   '#2DD4BF',
+    fillColor:   '#2DD4BF',
+    label:       'Clear uptrend forming — discipline is compounding.',
   },
   4: {
-    color: 'text-emerald-400',
-    bar:   'bg-emerald-400',
-    badge: 'bg-emerald-400/10 border-emerald-400/25 text-emerald-400',
-    glow:  '',
+    color:       'text-emerald-400',
+    bar:         'bg-emerald-400',
+    badgeBg:     'bg-emerald-400/10',
+    badgeBorder: 'border-emerald-400/25',
+    lineColor:   '#34d399',
+    fillColor:   '#34d399',
+    label:       'You\'re on a streak — don\'t break it.',
   },
   5: {
-    color: 'text-amber-400',
-    bar:   'bg-amber-400',
-    badge: 'bg-amber-400/10 border-amber-400/25 text-amber-400',
-    glow:  'shadow-[0_0_24px_rgba(251,191,36,0.08)]',
+    color:       'text-amber-400',
+    bar:         'bg-amber-400',
+    badgeBg:     'bg-amber-400/10',
+    badgeBorder: 'border-amber-400/25',
+    lineColor:   '#fbbf24',
+    fillColor:   '#fbbf24',
+    label:       'Elite consistency — this is what separates professionals.',
   },
 }
 
-// ── Tree SVG (5 progressive stages) ──────────────────────────────────────────
+// ── Equity curve SVGs — each level is progressively smoother and more upward ─
 
-function TreeSVG({ level, colorClass }: { level: GrowthLevel; colorClass: string }) {
-  return (
-    <svg
-      viewBox="0 0 44 56"
-      fill="none"
-      className={cn('w-11 h-14 shrink-0', colorClass)}
-      aria-hidden
-    >
-      {/* Trunk — always present, opacity scales with level */}
-      <rect
-        x="19" y="42" width="6" height="12" rx="2"
-        fill="currentColor"
-        opacity={0.35 + level * 0.1}
-      />
-
-      {/* Layer 4 — bottom canopy (L3+) */}
-      {level >= 3 && (
-        <polygon
-          points="22,26 7,44 37,44"
-          fill="currentColor"
-          opacity="0.95"
-        />
-      )}
-
-      {/* Layer 3 — mid canopy (L2+) */}
-      {level >= 2 && (
-        <polygon
-          points="22,18 9,38 35,38"
-          fill="currentColor"
-          opacity={level >= 3 ? 0.80 : 0.95}
-        />
-      )}
-
-      {/* Layer 2 — upper canopy (L3+) */}
-      {level >= 3 && (
-        <polygon
-          points="22,10 11,30 33,30"
-          fill="currentColor"
-          opacity="0.65"
-        />
-      )}
-
-      {/* Layer 1 — top canopy (L4+) */}
-      {level >= 4 && (
-        <polygon
-          points="22,4 13,24 31,24"
-          fill="currentColor"
-          opacity="0.50"
-        />
-      )}
-
-      {/* Seed (L1 only) */}
-      {level === 1 && (
-        <>
-          <ellipse cx="22" cy="36" rx="7" ry="5" fill="currentColor" opacity="0.45" />
-          <line
-            x1="22" y1="31" x2="22" y2="24"
-            stroke="currentColor" strokeWidth="2" opacity="0.30"
-          />
-        </>
-      )}
-
-      {/* Elite star (L5 only) */}
-      {level === 5 && (
-        <circle cx="22" cy="4" r="3" fill="currentColor" opacity="0.90" />
-      )}
-    </svg>
-  )
+const CURVE_DATA: Record<GrowthLevel, { line: string; area: string; dot: [number, number] }> = {
+  // Level 1 — flat, noisy, no clear direction
+  1: {
+    line: 'M 4,28 L 14,20 L 22,27 L 30,18 L 38,25 L 46,16 L 54,22 L 62,19 L 70,23 L 78,26',
+    area: 'M 4,28 L 14,20 L 22,27 L 30,18 L 38,25 L 46,16 L 54,22 L 62,19 L 70,23 L 78,26 L 78,42 L 4,42 Z',
+    dot:  [78, 26],
+  },
+  // Level 2 — noisy but upward bias appearing
+  2: {
+    line: 'M 4,36 L 14,28 L 22,32 L 30,22 L 38,26 L 46,16 L 54,20 L 62,13 L 70,17 L 78,10',
+    area: 'M 4,36 L 14,28 L 22,32 L 30,22 L 38,26 L 46,16 L 54,20 L 62,13 L 70,17 L 78,10 L 78,42 L 4,42 Z',
+    dot:  [78, 10],
+  },
+  // Level 3 — clear uptrend with moderate oscillation
+  3: {
+    line: 'M 4,38 L 14,30 L 22,26 L 30,20 L 38,22 L 46,14 L 54,16 L 62,9 L 70,11 L 78,6',
+    area: 'M 4,38 L 14,30 L 22,26 L 30,20 L 38,22 L 46,14 L 54,16 L 62,9 L 70,11 L 78,6 L 78,42 L 4,42 Z',
+    dot:  [78, 6],
+  },
+  // Level 4 — smooth, consistent uptrend
+  4: {
+    line: 'M 4,40 L 14,32 L 22,26 L 30,20 L 38,15 L 46,11 L 54,8 L 62,6 L 70,5 L 78,4',
+    area: 'M 4,40 L 14,32 L 22,26 L 30,20 L 38,15 L 46,11 L 54,8 L 62,6 L 70,5 L 78,4 L 78,42 L 4,42 Z',
+    dot:  [78, 4],
+  },
+  // Level 5 — perfect bezier curve, no noise
+  5: {
+    line: 'M 4,42 C 18,38 28,26 40,16 C 52,8 64,4 78,4',
+    area: 'M 4,42 C 18,38 28,26 40,16 C 52,8 64,4 78,4 L 78,42 L 4,42 Z',
+    dot:  [78, 4],
+  },
 }
 
-// ── Stat pill ─────────────────────────────────────────────────────────────────
+function CurveIcon({ level }: { level: GrowthLevel }) {
+  const cfg = LEVEL_CONFIG[level]
+  const curve = CURVE_DATA[level]
 
-function StatPill({
-  label,
-  value,
-  locked,
-}: {
-  label: string
-  value: string
-  locked?: boolean
-}) {
   return (
-    <div className="flex flex-col gap-0.5">
-      <span className="text-[10px] uppercase tracking-wider text-[#4A5880]">{label}</span>
-      {locked ? (
-        <span className="flex items-center gap-1 text-xs text-[#4A5880]">
-          <Lock className="h-3 w-3" />
-          Pro
-        </span>
-      ) : (
-        <span className="text-sm font-semibold text-[#DDE4F0]">{value}</span>
-      )}
-    </div>
+    <svg
+      viewBox="0 0 82 44"
+      fill="none"
+      className="w-full h-full"
+      aria-hidden
+    >
+      {/* Horizontal grid lines */}
+      {[42, 28, 14].map((y) => (
+        <line key={y} x1="4" y1={y} x2="78" y2={y}
+          stroke={cfg.lineColor} strokeWidth="0.5" opacity="0.12" />
+      ))}
+
+      {/* Area fill */}
+      <path d={curve.area} fill={cfg.fillColor} opacity="0.08" />
+
+      {/* Main curve */}
+      <path
+        d={curve.line}
+        stroke={cfg.lineColor}
+        strokeWidth="1.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+
+      {/* End dot (current position) */}
+      <circle
+        cx={curve.dot[0]} cy={curve.dot[1]}
+        r="3"
+        fill={cfg.lineColor}
+      />
+      <circle
+        cx={curve.dot[0]} cy={curve.dot[1]}
+        r="5.5"
+        fill={cfg.lineColor}
+        opacity="0.20"
+      />
+    </svg>
   )
 }
 
@@ -152,101 +154,118 @@ function StatPill({
 
 export function GrowthWidget({ trades, plan }: GrowthWidgetProps) {
   const state = useMemo(() => getUserGrowthState(trades), [trades])
-  const cfg = LEVEL_CONFIG[state.growthLevel]
+  const cfg   = LEVEL_CONFIG[state.growthLevel]
   const isPro = plan === 'pro'
 
-  // Animate progress bar on mount
+  // Animate progress bar after mount
   const [barWidth, setBarWidth] = useState(0)
   useEffect(() => {
-    const t = setTimeout(() => setBarWidth(state.growthProgress), 120)
+    const t = setTimeout(() => setBarWidth(state.growthProgress), 150)
     return () => clearTimeout(t)
   }, [state.growthProgress])
 
-  const nextLevel = LEVEL_NAMES[(Math.min(state.growthLevel + 1, 5)) as GrowthLevel]
+  const nextLevelName =
+    state.growthLevel < 5
+      ? LEVEL_NAMES[(state.growthLevel + 1) as GrowthLevel]
+      : null
 
   return (
-    <div
-      className={cn(
-        'bg-[#131826] border border-[#1A2540] rounded-xl p-5 relative overflow-hidden',
-        cfg.glow
-      )}
-    >
-      {/* Subtle top accent */}
-      <div className={cn('absolute top-0 left-0 right-0 h-px', cfg.bar, 'opacity-60')} />
+    <div className="bg-[#131826] border border-[#1A2540] rounded-xl overflow-hidden">
 
-      <div className="flex flex-col sm:flex-row sm:items-center gap-5">
+      {/* Top bar in level color */}
+      <div className={cn('h-px w-full opacity-70', cfg.bar)} />
 
-        {/* ── Left: Tree + Level ── */}
-        <div className="flex items-center gap-4 shrink-0">
-          <div className={cn(
-            'w-16 h-16 rounded-xl border flex items-center justify-center',
-            cfg.badge
-          )}>
-            <TreeSVG level={state.growthLevel} colorClass={cfg.color} />
-          </div>
+      <div className="p-5 flex flex-col sm:flex-row gap-5">
 
-          <div>
-            <div className="flex items-center gap-2 mb-0.5">
-              <span className={cn('text-[10px] font-medium uppercase tracking-wider', cfg.color)}>
-                Level {state.growthLevel}
-              </span>
-              <span className={cn(
-                'inline-flex px-1.5 py-0.5 text-[10px] font-semibold rounded border',
-                cfg.badge
-              )}>
-                {LEVEL_NAMES[state.growthLevel]}
-              </span>
-            </div>
-            <p className="text-xs text-[#7B8BB0] max-w-[200px]">{state.message}</p>
-          </div>
+        {/* ── Chart panel ── */}
+        <div className={cn(
+          'shrink-0 w-full sm:w-44 h-24 sm:h-auto rounded-lg border flex items-center justify-center p-3',
+          cfg.badgeBg, cfg.badgeBorder
+        )}>
+          <CurveIcon level={state.growthLevel} />
         </div>
 
-        {/* ── Right: Stats + Progress ── */}
-        <div className="flex-1 flex flex-col gap-3">
+        {/* ── Info panel ── */}
+        <div className="flex-1 flex flex-col justify-between gap-3 min-w-0">
 
-          {/* Stats row */}
-          <div className="flex items-center gap-6">
-            {/* Streak — always visible */}
-            <div className="flex flex-col gap-0.5">
-              <span className="text-[10px] uppercase tracking-wider text-[#4A5880]">Streak</span>
-              <span className="flex items-center gap-1 text-sm font-semibold text-[#DDE4F0]">
-                <Flame className={cn(
-                  'h-3.5 w-3.5',
-                  state.streak > 0 ? 'text-orange-400' : 'text-[#4A5880]'
-                )} />
-                {state.streak}d
-              </span>
+          {/* Header row */}
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              {/* Section label */}
+              <p className="text-[10px] uppercase tracking-widest text-[#4A5880] mb-1">
+                Signal Growth
+              </p>
+              {/* Level */}
+              <div className="flex items-center gap-2">
+                <span className={cn(
+                  'inline-flex px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded border',
+                  cfg.badgeBg, cfg.badgeBorder, cfg.color
+                )}>
+                  Lv {state.growthLevel}
+                </span>
+                <span className={cn('text-base font-bold', cfg.color)}>
+                  {LEVEL_NAMES[state.growthLevel]}
+                </span>
+              </div>
+              {/* Message */}
+              <p className="text-xs text-[#7B8BB0] mt-1 max-w-xs">
+                {state.message}
+              </p>
             </div>
 
-            {/* Total trades — always visible */}
-            <StatPill label="Trades logged" value={String(state.totalTrades)} />
+            {/* Streak badge */}
+            <div className={cn(
+              'shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-sm font-semibold',
+              state.streak > 0
+                ? 'bg-orange-500/10 border-orange-500/25 text-orange-400'
+                : 'bg-[#0D1121] border-[#1A2540] text-[#4A5880]'
+            )}>
+              <Flame className="h-3.5 w-3.5" />
+              {state.streak}d
+            </div>
+          </div>
 
-            {/* Consistency — Pro only */}
-            <StatPill
-              label="7-day rate"
-              value={`${state.consistency}%`}
-              locked={!isPro}
-            />
+          {/* Stats row */}
+          <div className="flex items-center gap-5 flex-wrap">
+            <div className="flex flex-col gap-0.5">
+              <span className="text-[10px] uppercase tracking-wider text-[#4A5880]">Trades</span>
+              <span className="text-sm font-semibold text-[#DDE4F0]">{state.totalTrades}</span>
+            </div>
 
-            {/* Score — Pro only */}
-            <StatPill
-              label="Growth score"
-              value={`${state.compositeScore}/100`}
-              locked={!isPro}
-            />
+            <div className="flex flex-col gap-0.5">
+              <span className="text-[10px] uppercase tracking-wider text-[#4A5880]">7-day rate</span>
+              {isPro ? (
+                <span className="text-sm font-semibold text-[#DDE4F0]">{state.consistency}%</span>
+              ) : (
+                <span className="flex items-center gap-1 text-xs text-[#4A5880]">
+                  <Lock className="h-3 w-3" /> Pro
+                </span>
+              )}
+            </div>
+
+            <div className="flex flex-col gap-0.5">
+              <span className="text-[10px] uppercase tracking-wider text-[#4A5880]">Signal score</span>
+              {isPro ? (
+                <span className="text-sm font-semibold text-[#DDE4F0]">{state.compositeScore}/100</span>
+              ) : (
+                <span className="flex items-center gap-1 text-xs text-[#4A5880]">
+                  <Lock className="h-3 w-3" /> Pro
+                </span>
+              )}
+            </div>
           </div>
 
           {/* Progress bar */}
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[10px] text-[#4A5880] uppercase tracking-wider">
-                {state.growthLevel < 5 ? `Progress to ${nextLevel}` : 'Peak level reached'}
+              <span className="text-[10px] uppercase tracking-wider text-[#4A5880]">
+                {nextLevelName ? `Progress to ${nextLevelName}` : 'Peak level reached'}
               </span>
-              <span className={cn('text-[10px] font-semibold', cfg.color)}>
+              <span className={cn('text-[10px] font-bold tabular-nums', cfg.color)}>
                 {state.growthProgress}%
               </span>
             </div>
-            <div className="h-1.5 bg-[#0D1121] rounded-full overflow-hidden">
+            <div className="h-1 bg-[#0D1121] rounded-full overflow-hidden">
               <div
                 className={cn('h-full rounded-full transition-all duration-1000 ease-out', cfg.bar)}
                 style={{ width: `${barWidth}%` }}
@@ -254,17 +273,17 @@ export function GrowthWidget({ trades, plan }: GrowthWidgetProps) {
             </div>
           </div>
 
-          {/* Pro upsell if free */}
+          {/* Pro upsell */}
           {!isPro && (
             <Link
               href="/dashboard/upgrade"
-              className="text-[10px] text-[#4361EE] hover:text-[#DDE4F0] transition-colors"
+              className="text-[10px] text-[#4361EE] hover:text-[#DDE4F0] transition-colors w-fit"
             >
-              Unlock consistency insights and growth breakdown →
+              Unlock 7-day rate and signal score with Pro →
             </Link>
           )}
-        </div>
 
+        </div>
       </div>
     </div>
   )

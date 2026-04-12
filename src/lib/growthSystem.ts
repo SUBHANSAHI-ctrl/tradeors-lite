@@ -5,11 +5,11 @@ import { Trade } from '@/types/trade'
 export type GrowthLevel = 1 | 2 | 3 | 4 | 5
 
 export const LEVEL_NAMES: Record<GrowthLevel, string> = {
-  1: 'Seed',
-  2: 'Sprout',
-  3: 'Growing',
-  4: 'Strong',
-  5: 'Elite Trader',
+  1: 'Raw Signal',
+  2: 'Finding Edge',
+  3: 'Trending',
+  4: 'Compounding',
+  5: 'Elite Curve',
 }
 
 export interface GrowthState {
