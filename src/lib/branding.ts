@@ -10,8 +10,8 @@ export const BRANDING = {
 
   // Logo Configuration - Using the specific PNG logo file
   logo: {
-    main: '/logo/trakvex-logo.png', // Main logo (PNG)
-    fallback: '/logo/trakvex-logo.png', // Same as main for consistency
+    main: '/logo/qovavo-traderos-logo.png', // Main logo (PNG)
+    fallback: '/logo/qovavo-traderos-logo.png', // Same as main for consistency
     favicon: '/logo/favicon.ico',
     appleTouchIcon: '/logo/apple-touch-icon.png',
     icon192: '/logo/icon-192x192.png',
