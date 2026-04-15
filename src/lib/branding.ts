@@ -1,17 +1,17 @@
-// Branding Configuration for TraderOS Lite
+// Branding Configuration for Trakvex
 // Update these values for custom branding
 
 export const BRANDING = {
   // Company Information
-  companyName: 'Qovavo',
-  appName: 'TraderOS',
-  supportEmail: 'team@qovavo.com',
-  domain: 'traderos.qovavo.com',
-  
+  companyName: 'Trakvex',
+  appName: 'Trakvex',
+  supportEmail: 'team@trakvex.com',
+  domain: 'trakvex.com',
+
   // Logo Configuration - Using the specific PNG logo file
   logo: {
-    main: '/logo/qovavo-traderos-logo.png', // Main logo (PNG)
-    fallback: '/logo/qovavo-traderos-logo.png', // Same as main for consistency
+    main: '/logo/trakvex-logo.png', // Main logo (PNG)
+    fallback: '/logo/trakvex-logo.png', // Same as main for consistency
     favicon: '/logo/favicon.ico',
     appleTouchIcon: '/logo/apple-touch-icon.png',
     icon192: '/logo/icon-192x192.png',
@@ -40,7 +40,7 @@ export const BRANDING = {
   
   // Metadata
   metadata: {
-    title: 'TraderOS - Professional Trading Analytics by Qovavo',
+    title: 'Trakvex - Professional Trading Analytics',
     description: 'Track your trades, analyze performance, and discover why you win or lose with professional-grade analytics.',
     keywords: 'trading, analytics, forex, stocks, performance tracking, trading journal',
   },

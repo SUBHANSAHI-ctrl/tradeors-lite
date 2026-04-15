@@ -258,7 +258,7 @@ export default function HomePage() {
               See your trading clearly
             </h2>
             <p className="text-[#7B8BB0] text-lg max-w-lg">
-              Most traders don&apos;t know their real numbers. TraderOS shows you exactly what&apos;s working — and what isn&apos;t.
+              Most traders don&apos;t know their real numbers. Trakvex shows you exactly what&apos;s working — and what isn&apos;t.
             </p>
           </div>
 
@@ -332,7 +332,7 @@ export default function HomePage() {
               your decisions — when you enter, how you manage risk, and how you react to losses.
             </p>
             <p className="text-[#4A5880]">
-              TraderOS helps you identify the patterns in your behavior so you can fix what&apos;s
+              Trakvex helps you identify the patterns in your behavior so you can fix what&apos;s
               actually holding you back — not just what feels like the problem.
             </p>
           </div>

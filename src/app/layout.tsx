@@ -6,7 +6,7 @@ import { AuthProvider } from '@/contexts/AuthContext'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'TraderOS - Qovavo',
+  title: 'Trakvex - Professional Trading Journal',
   description: 'Professional trading journal and analytics platform',
   keywords: 'trading, forex, stocks, crypto, trading journal, performance analysis, trade tracking',
   icons: {
