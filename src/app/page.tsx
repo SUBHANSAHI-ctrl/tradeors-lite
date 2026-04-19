@@ -58,7 +58,7 @@ export default function HomePage() {
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#1E2844] bg-[#0F1220] mb-7">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#2DD4BF] animate-pulse" />
                 <span className="text-[11px] uppercase tracking-widest text-[#7B8BB0] font-medium">
-                  Live Trading Analytics
+                  Part of the Qovavo Ecosystem
                 </span>
               </div>
 
@@ -187,7 +187,7 @@ export default function HomePage() {
           <div className="mb-12">
             <p className="text-[11px] uppercase tracking-widest text-[#4361EE] font-medium mb-3">Features</p>
             <h2 className="text-4xl font-bold tracking-tight text-[#DDE4F0] mb-4">
-              Everything you need to improve
+              The Analytics Tools Serious Traders Use
             </h2>
             <p className="text-[#7B8BB0] text-lg max-w-lg">
               Built to help you understand your trades, your behavior, and your edge — not just store data.
@@ -255,7 +255,7 @@ export default function HomePage() {
           <div className="mb-12">
             <p className="text-[11px] uppercase tracking-widest text-[#4361EE] font-medium mb-3">Analytics</p>
             <h2 className="text-4xl font-bold tracking-tight text-[#DDE4F0] mb-4">
-              See your trading clearly
+              Know Exactly Where You Win — and Where You Don&apos;t
             </h2>
             <p className="text-[#7B8BB0] text-lg max-w-lg">
               Most traders don&apos;t know their real numbers. Trakvex shows you exactly what&apos;s working — and what isn&apos;t.
@@ -325,7 +325,7 @@ export default function HomePage() {
           <div className="max-w-2xl">
             <p className="text-[11px] uppercase tracking-widest text-[#4361EE] font-medium mb-3">Behavioral Edge</p>
             <h2 className="text-4xl font-bold tracking-tight text-[#DDE4F0] mb-6">
-              Your results come from your behavior
+              Most Losses Come From Behavior, Not Strategy
             </h2>
             <p className="text-lg text-[#7B8BB0] mb-4 leading-relaxed">
               Most traders focus on finding the next strategy. But your results are driven by
@@ -345,7 +345,7 @@ export default function HomePage() {
           <div className="bg-[#131826] border border-[#1A2540] rounded-2xl p-10">
             <div className="max-w-xl">
               <h2 className="text-4xl font-bold tracking-tight text-[#DDE4F0] mb-4">
-                Start improving your trading today
+                Stop Trading on Gut Feeling. Use Your Own Data.
               </h2>
               <p className="text-[#7B8BB0] text-lg mb-8">
                 You don&apos;t need another strategy. You need to understand the one you already have.
