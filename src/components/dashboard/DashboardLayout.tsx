@@ -114,6 +114,23 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             })}
           </div>
         </nav>
+
+        {/* Funding Pips — sidebar promo */}
+        <div className="absolute bottom-0 left-0 right-0 px-3 pb-4">
+          <div className="bg-[#0D1121] border border-[#2DD4BF]/15 rounded-xl p-3">
+            <p className="text-[10px] uppercase tracking-widest text-[#2DD4BF] font-medium mb-1.5">Get Funded</p>
+            <p className="text-xs font-semibold text-[#DDE4F0] mb-1 leading-snug">Your edge is proven. Now scale it.</p>
+            <p className="text-[11px] text-[#4A5880] mb-3 leading-relaxed">Trade up to $200k with Funding Pips — keep up to 90% of profits.</p>
+            <a
+              href="https://app.fundingpips.com/register?ref=58FCA974"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block w-full text-center px-3 py-1.5 bg-[#2DD4BF]/10 hover:bg-[#2DD4BF]/20 border border-[#2DD4BF]/20 text-[#2DD4BF] text-[11px] font-semibold rounded-lg transition-colors"
+            >
+              Get Funded →
+            </a>
+          </div>
+        </div>
       </div>
 
       {/* ── Main content ─────────────────────────────────── */}
