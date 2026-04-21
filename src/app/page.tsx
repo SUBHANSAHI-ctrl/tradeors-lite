@@ -339,6 +339,51 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ── Funding Pips Partner ───────────────────────── */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-[#08090F]">
+        <div className="max-w-6xl mx-auto">
+          <div className="relative bg-[#131826] border border-[#2DD4BF]/20 rounded-2xl px-8 py-12 overflow-hidden">
+            <div className="absolute top-0 right-0 w-72 h-72 bg-[#2DD4BF]/4 rounded-full blur-3xl -translate-y-1/3 translate-x-1/4 pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-56 h-56 bg-[#4361EE]/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/4 pointer-events-none" />
+            <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+              <div>
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#2DD4BF]/10 border border-[#2DD4BF]/20 mb-6">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#2DD4BF]" />
+                  <span className="text-[11px] uppercase tracking-widest text-[#2DD4BF] font-medium">Recommended Partner</span>
+                </div>
+                <h2 className="text-3xl sm:text-4xl font-bold text-[#DDE4F0] mb-4 tracking-tight">
+                  Your edge is proven.<br />Now trade it with real capital.
+                </h2>
+                <p className="text-[#7B8BB0] leading-relaxed mb-6">
+                  Tracking your trades is step one. Step two is scaling with capital that matches your skill. Funding Pips is the prop firm we recommend — straightforward rules, fast payouts, and accounts up to $200k.
+                </p>
+                <a
+                  href="https://app.fundingpips.com/register?ref=58FCA974"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-[#2DD4BF] hover:bg-[#26b8a5] text-[#08090F] text-sm font-bold rounded-lg transition-colors"
+                >
+                  Get Funded with Funding Pips →
+                </a>
+                <p className="mt-3 text-[11px] text-[#4A5880]">Affiliate link — we earn a commission at no cost to you.</p>
+              </div>
+              <div className="grid grid-cols-1 gap-3">
+                {[
+                  { title: 'Up to $200,000 in Funding', desc: 'Scale your trading without risking your own capital beyond the challenge fee.' },
+                  { title: 'Keep Up to 90% of Profits', desc: 'One of the highest profit splits in the industry — you earn what your performance deserves.' },
+                  { title: 'Simple, Clear Rules', desc: 'No hidden conditions. Daily loss limit, max drawdown, profit target — exactly what you\'ve been tracking in Trakvex.' },
+                ].map((item) => (
+                  <div key={item.title} className="bg-[#0D1121] border border-[#1A2540] rounded-xl p-4">
+                    <p className="text-sm font-semibold text-[#DDE4F0] mb-1">{item.title}</p>
+                    <p className="text-xs text-[#7B8BB0] leading-relaxed">{item.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── CTA ────────────────────────────────────────── */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-[#08090F]">
         <div className="max-w-6xl mx-auto">
